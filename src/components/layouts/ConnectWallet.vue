@@ -92,7 +92,8 @@ function loadConnectorImage(connector: Connector) {
 	if (connector.icon) {
 		return connector.icon;
 	} else {
-		return `/img/connectors/${connector.name}.svg`;
+		// return `/img/connectors/${connector.name}.svg`;
+		return `./src/assets/connectors/${connector.name}.svg`;
 	}
 }
 // const goerliKey = import.meta.env.VITE_GOERLI_KEY;
