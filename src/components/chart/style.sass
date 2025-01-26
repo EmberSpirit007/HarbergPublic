@@ -1,0 +1,18 @@
+.chart-button
+    padding: 0 18px
+    border-radius: 12px
+    display: flex
+    align-items: center
+    border: none
+    height: 32px
+    background-color: var(--chart-button-background-color)
+    transition: .3s ease
+    svg
+        path
+            &.stroke
+                stroke: white
+            &.fill
+                fill: white
+    &:hover, &:active
+        background-color: var(--chart-button-background-color--hovered)
+        cursor: pointer

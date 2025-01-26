@@ -1,0 +1,36 @@
+@use "./global.sass"
+
+#app
+    display: flex
+    flex-direction: column
+    min-height: 100vh
+    gap: 64px
+    position: relative
+
+main
+    padding-top: 100px
+    @media (min-width: 992px)
+        // padding-top: 160px
+        padding-top: 100px
+footer
+    margin-top: auto
+
+.social-links
+    display: flex
+    gap: 24px
+
+.Vue-Toastification__container
+    &.harb-toast-container
+        &.top-right
+            @media (min-width: 992px)
+                top: 80px
+                // right: 20px
+                // left: unset
+
+.pointer
+    &:hover, &:active, &:focus
+        cursor: pointer
+
+html
+    scroll-behavior: smooth
+    scroll-padding-top: 100px

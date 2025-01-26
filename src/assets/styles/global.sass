@@ -1,0 +1,300 @@
+@font-face
+    font-family: "DM Sans"
+    src: url("./src/assets/fonts/DMSans-Regular.ttf")
+    font-weight: 400
+    font-style: normal
+
+@font-face
+    font-family: "Crypto Scam"
+    src: url("./src/assets/fonts/Crypto-Scam-Regular.ttf")
+    font-weight: 400
+    font-style: normal
+@font-face
+    font-family: "Play"
+    src: url("./src/assets/fonts/Play-Regular.ttf")
+    font-weight: 400
+    font-style: normal
+@font-face
+    font-family: "Play-Bold"
+    src: url("./src/assets/fonts/Play-Bold.ttf")
+
+:root, [data-theme="default"]
+    font-family: "DM Sans", sans-serif
+    color: var(--color-midnight-black)
+    font-optical-sizing: auto
+    font-size: 14px
+    line-height: 20px
+    letter-spacing: 0.17px
+    // global
+    --color-primary: #F9F9FA
+    --color-primary--hovered: var(--color-white-hovered)
+    --color-primary-light: #FFF
+    --color-white-hovered: #cccccc
+    --color-black-hovered: #333333
+
+    --color-secondary: #000
+    --color-secondary-light: #0F0F0F
+
+    --color-tertiary-very-light: #F0F0F0
+    --color-tertiary-light: #D6D6D6
+    --color-tertiary: #A1A3A7
+    --color-tertiary-dark: #858585
+    --color-grey: #858585
+    --color-quatenary: #FFF
+
+    --color-steel-blue: #4682B4
+    --color-based-blue: #1A54F4
+    --color-based-blue--hovered: #0a3ece
+
+    --color-bright-white: #FFFFFF
+    --color-bright-white-hovered: #e6e6e6
+    --color-very-light-grey: #F0F0F0
+    --color-light-grey: #D6D6D6
+    --color-border-main: #A1A3A7
+    --color-midnight-black: #0F0F0F
+    --color-midnight-black-hovered: #272727
+    --color-font: #000
+    --color-bg: white
+    --color-black: black
+    --color-blood: #8B0000
+    --color-white: white
+    --color-text-primary: #121312
+    --color-text-primary-hovered: #292b29
+    --color-contrast-lower: hsl(0, 0%, 95%)
+    --color-contrast-low: hsl(240, 1%, 83%)
+    --color-contrast-medium: hsl(240, 1%, 48%)
+    --color-contrast-high: hsl(240, 4%, 20%)
+    --color-contrast-higher: black
+    --color-disabled: #A1A3A7
+    --color-bg-disabled: #D6D6D6
+    --border-radius: 16px
+    //buttons
+    --btn-color: var(--color-primary)
+    //todo btn-color hover
+    --btn-bg-color: var(--color-black)
+    --btn-padding: 16px 32px
+    --btn-dense-padding: 8px 16px
+
+    --font-size-number-big: 24px
+    --font-size-number-small: 14px
+    --font-size-alert-title: 16px
+    --font-size-navigation: 18px
+    --font-size-button-small: 13px
+    --font-size-button-medium: 14px
+    --font-size-button-large: 20px
+
+    --color-button-bg: var(--color-based-blue)
+    --color-button-font: var(--color-white)
+    --color-button-bg--outlined: var(--color-white)
+    --color-button-font--outlined: var(--color-based-blue)
+    --color-button-border--outlined: var(--color-based-blue)
+    --color-button-bg--hovered: var(--color-based-blue)
+    --color-button-font--hovered: var(--color-based-blue)
+    --color-button-bg--active: var(--color-based-blue)
+    --color-button-font--active: var(--color-based-blue)
+    --color-button-bg--light: var(--color-white)
+    --color-button-font--light: var(--color-secondary)
+    --color-button-border--light: var(--color-based-blue)
+
+    //card
+    --color-card-font: var(--color-secondary)
+    --color-card-bg: var(--color-white)
+    --color-card-box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.20)
+    --card-border-color: var(--color-border-main)
+    --card-border-radius: var(--border-radius)
+    --card-border-width: 1px
+    --card-border-style: solid
+
+    --color-tab-bg: var(--color-primary-light)
+    --color-tab-font--active: var(--color-based-blue)
+    --color-tab-border--active: var(--color-based-blue)
+
+    --color-navbar-bg: var(--color-white)
+    --color-navbar-font: var(--color-black)
+    --color-navbar-border: var(--color-black)
+
+    --color-font-main: var(--color-black)
+
+    --color-social-font: var(--color-black)
+    --color-social-border: var(--color-black)
+
+    --color-collapse-font: var(--color-black)
+    --color-collapse-bg: var(--color-white)
+    --color-collapse-border: var(--color-black)
+
+    --color-output-bg: var(--color-very-light-grey)
+
+    --color-expand-icon: var(--color-black)
+
+    --color-icon: var(--color-black)
+
+    --chart-button-background-color: var(--color-based-blue)
+    --chart-button-background-color--hovered: var(--color-based-blue--hovered)
+
+    // --color-tab-bg--active:
+    // --color-tab-font--hovered:
+    // --color-tab-bg--hovered:
+
+    // --color-tab-font:
+    // --color-tab-bg:
+
+    //fonts
+    --font-h1: 52px
+    --font-h2: 44px
+    --font-h3: 32px
+    --font-h4: 27px
+    --font-h5: 24px
+    --font-h6: 20px
+    --font-subheader1: 16px
+    --font-subheader2: 14px
+    --font-body0: 18px
+    --font-body1: 16px
+    --font-body2: 14px
+    --font-caption: 12px
+    --font-overline: 11px
+    body
+        color: var(--color-font-main)
+    h1,h2,h3,h4,h5, h6
+        text-align: center
+    h1
+        font-size: var(--font-h2)
+        margin: 24px 0
+        letter-spacing: -0.5px
+        font-weight: 700
+        line-height: 120%
+        @media (min-width: 992px)
+            font-size: var(--font-h1)
+    h2
+        font-size: var(--font-h2)
+        letter-spacing: -0.5px
+        font-weight: 700
+        line-height: 120%
+    h3
+        font-size: var(--font-h3)
+    h4
+        font-size: var(--font-h4)
+    h5
+        font-size: var(--font-h5)
+        text-transform: none
+        font-weight: 700
+        line-height: 133.4%
+    h6
+        font-size: var(--font-h6)
+
+    .subheader1
+        font-size: var(--font-subheader1)
+        font-weight: bold
+        letter-spacing: 0.15px
+        text-decoration: underline
+    .subheader2
+        font-size: var(--font-subheader2)
+        font-weight: bold
+        letter-spacing: 0.1px
+    .number-big
+        font-size: var(--font-size-number-big)
+        letter-spacing: 4.8px
+    .number-small
+        font-size: var(--font-size-number-small)
+        letter-spacing: 20%
+    .navigation-font
+        font-weight: 500
+        font-size: var(--font-size-navigation)
+    .button-font
+        font-weight: 500
+        font-size: var(--font-size-navigation)
+    .body2
+        font-size: var(--font-body2)
+        font-weight: 400
+        letter-spacing: 0.17px
+    .caption
+        font-size: var(--font-caption)
+        letter-spacing: 1px
+
+[data-theme="dark"]
+    --color-primary: black
+    --color-primary--hovered: var(--color-black-hovered)
+    --color-secondary: black
+    --color-steel-blue: #4682B4
+    --color-based-blue: #1A54F4
+    --color-bg: black
+    --color-font: white
+    --color-black: white
+    --color-dark-grey: #1F1F1F
+    --color-contrast-lower: hsl(0, 0%, 95%)
+    --color-contrast-low: hsl(240, 1%, 83%)
+    --color-contrast-medium: hsl(240, 1%, 48%)
+    --color-contrast-high: hsl(240, 4%, 20%)
+    --color-contrast-higher: white
+    --color-disabled: #A1A3A7
+    --color-bg-disabled: #D6D6D6
+    --border-radius: 12px
+    --color-navbar-bg: var(--color-midnight-black)
+    --color-navbar-font: var(--color-white)
+    --color-navbar-border: var(--color-white)
+    --color-font-main: var(--color-white)
+
+    --color-card-bg: var(--color-midnight-black)
+    --color-card-font: var(--color-white)
+    --color-card-box-shadow: 0px 0px 30px 0px rgba(255, 255, 255, 0.2)
+
+    --color-tab-bg: var(--color-text-primary)
+    --color-tab-bg--active: var(--color-text-primary)
+
+    --color-output-bg: var(--color-dark-grey)
+
+    --color-social-font: var(--color-white)
+    --color-social-border: var(--color-white)
+
+    --color-collapse-font: var(--color-white)
+    --color-collapse-bg: var(--color-dark-grey)
+    --color-collapse-border: var(--color-white)
+
+    --color-expand-icon: var(--color-white)
+
+    --chart-button-background-color: var(--color-primary)
+    --chart-button-background-color--hovered: var(--color-primary--hovered)
+
+.container
+    margin-right: auto
+    margin-left: auto
+    padding-right: 16px
+    padding-left: 16px
+    box-sizing: content-box
+    // &.container--variant1
+    //     @media (min-width: 992px)
+    //         max-width: 800px
+    //         padding: 24px 64px
+    @media (min-width: 992px)
+        max-width: 500px
+
+.container2
+    @extend .container
+    @media (min-width: 992px)
+        max-width: 650px
+
+.container3
+    @extend .container
+    @media (min-width: 992px)
+        max-width: 750px
+.container4
+    @extend .container
+    @media (min-width: 992px)
+        max-width: 1100px
+
+.row
+    display: flex
+    flex-direction: row
+    >*
+        flex: 1 1 auto
+
+body
+    background-color: var(--color-primary)
+    margin: 0
+
+*
+    box-sizing: border-box
+    
+
+a
+    color: inherit
+    text-decoration: none

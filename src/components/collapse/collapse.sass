@@ -1,0 +1,27 @@
+.f-collapse-inner
+    gap: 12px
+    .collapse-header
+        display: grid
+        width: 100%
+        grid-template-columns: auto auto auto auto auto
+        @media (min-width: 992px)
+            grid-template-columns: 20% 30% 30% auto 20%
+    .collapse-amount
+        grid-column: 5
+        text-align: right
+.collapsableDiv
+    .collapsed-body
+        display: flex
+        justify-content: space-between
+        >div
+            display: flex
+            gap: 8px
+        &.history
+            flex-direction: row
+    .collapsed-body--actions
+        margin-top: 8px
+        display: flex
+        >div
+            flex: 1 1 auto
+            @media (min-width: 992px)
+                flex: 1 1 25%
