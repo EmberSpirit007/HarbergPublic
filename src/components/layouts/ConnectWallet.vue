@@ -89,11 +89,10 @@ const { myActivePositions } = usePositions();
 const wallet = useWallet();
 const chain = useChain();
 function loadConnectorImage(connector: Connector) {
-    const basePath = import.meta.env.BASE_URL;
 	if (connector.icon) {
 		return connector.icon;
 	} else {
-		return `${basePath}/img/connectors/${connector.name}.svg`;
+		return `./img/connectors/${connector.name}.svg`;
 	}
 }
 // const goerliKey = import.meta.env.VITE_GOERLI_KEY;
