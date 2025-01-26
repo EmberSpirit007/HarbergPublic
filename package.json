@@ -9,8 +9,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "subtree": "git subtree push --prefix dist origin gh-pages",
-    "deploy": "gh-pages -d dist"
+    "subtree": "git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "@tanstack/vue-query": "^5.64.2",
