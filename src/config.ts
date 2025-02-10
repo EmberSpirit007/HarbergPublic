@@ -15,7 +15,16 @@ export const chainsData = [
         stake: "0xe28020BCdEeAf2779dd47c670A8eFC2973316EE2",
         harb: "0x22c264Ecf8D4E49D1E3CabD8DD39b7C4Ab51C1B8",
         uniswap: "https://app.uniswap.org/swap?chain=mainnet&inputCurrency=NATIVE"
-    }
+    },
+    {
+        //base
+        id: 8453,
+        thegraph: import.meta.env.VITE_BASE_URL,
+        path: "base",
+        stake: "0xed70707fab05d973ad41eae8d17e2bcd36192cfc",
+        harb: "0x45caa5929f6ee038039984205bdecf968b954820",
+        uniswap: "https://app.uniswap.org/swap?chain=mainnet&inputCurrency=NATIVE"
+    },
 ]
 
 export function getChain(id:number){

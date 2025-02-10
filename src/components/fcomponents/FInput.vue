@@ -104,16 +104,18 @@ function setFocus(event:MouseEvent){
     .f-input__wrapper
         display: flex
         border: 1px solid black
-        border-radius: var(--border-radius)
+        border-radius: 12px
         width: 100%
-        background-color: white
+        background-color: #2D2D2D
         &.f-input__wrapper--focused
             box-shadow: 0 0 0 1px black
         input
             border: 0
-            border-radius: var(--border-radius)
+            border-radius: 12px
             padding: 8px 12px
             width: 100%
+            background-color: #2D2D2D
+            color: #FFFFFF
             outline: none
             &.f-input--big
                 font-size: 18px
@@ -121,7 +123,8 @@ function setFocus(event:MouseEvent){
                 font-size: 16px
     &.f-input--disabled
         input
-            background-color: var(--color-light-grey)
+            background-color: #202020
+            color: #F0F0F0
     .f-input--suffix
         display: flex
         align-items: center

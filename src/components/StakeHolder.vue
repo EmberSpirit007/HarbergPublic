@@ -2,13 +2,6 @@
 	<div class="hold-stake-wrapper">
 		<f-card class="inner-border">
 					<div class="hold-inner">
-								<h4>Stake</h4>
-
-						<div>
-							Stake your $HARB to profit from new token issuance. New tokens are issued for every new
-							market buy of $HARB. Staking positions are limited. To keep things fair you have to pay a
-							tax (Harberger Tax).
-						</div>
 							<div class="stake-inner">
 								<template v-if="!statCollection.initialized">
 									<div>
@@ -30,7 +23,7 @@
 												v-model="stake.stakingAmountNumber"
 											>
 												<template v-slot:details>
-													<div>Balance: {{ maxStakeAmount }} $HARB</div>
+													<div>Balance: {{ maxStakeAmount.toFixed(2) }} $HARB</div>
 													<div @click="setMaxAmount" class="staking-amount-max">
 														<b>Max</b>
 													</div>
@@ -40,6 +33,7 @@
 											<f-input
 												label="Owner Slots"
 												class="staking-amount"
+                                                disabled
 												:modelValue="`${(Number(supplyFreeze) * 1000).toFixed(2)}(${supplyFreeze})`"
 											>
 											</f-input>
@@ -103,7 +97,7 @@
 								>
 							</div>
 						
-						<template v-if="myActivePositions.length > 0 && status === 'connected'">
+						<!-- <template v-if="myActivePositions.length > 0 && status === 'connected'">
 							<h5>Your Active Positions</h5>
 							<collapse-active
 								v-for="position in myActivePositions"
@@ -127,7 +121,7 @@
 								:key="position.id"
 								:position="position"
 							></collapse-history>
-						</template>
+						</template> -->
 					</div>
 		</f-card>
 	</div>

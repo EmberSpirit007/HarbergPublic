@@ -71,7 +71,7 @@ const percentageDot = computed(() => {
 });
 
 const settings = {
-	fill: "#1A54F4",
+	fill: "#7550AE",
 	background: "#000000",
 };
 

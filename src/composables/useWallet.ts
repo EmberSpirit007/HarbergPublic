@@ -34,6 +34,7 @@ export function useWallet() {
 	async function loadBalance() {
         logger.contract("loadBalance")
 		if (account.value.address) {
+            console.log("HarbContract",HarbContract );
             
 			balance.value = await getBalance(config as any, {
 				address: account.value.address,

@@ -1,5 +1,5 @@
 <template>
-	<div class="positions-graph" >
+	<div class="positions-graph">
 		<div class="chart-modal" :class="{ 'chart--fullscreen': fullscreenOpen }" @click="toggleFullscreen">
 			<div class="chart-inner" @click.stop>
 				<div class="chart--header">
@@ -9,11 +9,14 @@
 					</div>
 				</div>
 
-				<div class="chart--body" :class="{'disable-actions': props.positions?.length === 0,  dark: props.dark }">
-                        <canvas ref="Chart1"></canvas>
-                    <template v-if="props.positions?.length === 0">
-                        <p class="chart--no-positions">No positions</p> 
-                    </template>
+				<div
+					class="chart--body"
+					:class="{ 'disable-actions': props.positions?.length === 0, dark: props.dark }"
+				>
+					<canvas ref="Chart1"></canvas>
+					<template v-if="props.positions?.length === 0">
+						<p class="chart--no-positions">No positions</p>
+					</template>
 				</div>
 			</div>
 		</div>
@@ -144,12 +147,12 @@ watch(
 					positionIndex++;
 				}
 				if (positionIndex <= props.snatchedPositions.length && props.snatchedPositions.includes(position.id)) {
-					backgroundColorArray[index] = "red";
+					backgroundColorArray[index] = "##7550AE";
 				} else {
-					backgroundColorArray[index] = "red";
+					backgroundColorArray[index] = "##7550AE";
 					// const position = myChart.value.value.data.datasets[0].data[index];
 					if (position.iAmOwner) {
-						backgroundColorArray[index] = "#1A54F4";
+						backgroundColorArray[index] = "#7550AE";
 					} else if (props.dark) {
 						backgroundColorArray[index] = "white";
 					} else {
@@ -218,7 +221,7 @@ function renderChart(data: any) {
 
 		// }
 		if (position.iAmOwner) {
-			backgroundColors.push("rgba(26,84,244, 0.8)");
+			backgroundColors.push("rgba(117,80,174, 0.8)");
 		} else if (props.dark) {
 			backgroundColors[index] = "white";
 		} else {
@@ -238,8 +241,8 @@ function renderChart(data: any) {
 						type: "line",
 						label: "TaxRate",
 						data: data1,
-						backgroundColor: ["red"],
-						borderColor: ["red"],
+						backgroundColor: ["#7550AE"],
+						borderColor: ["#7550AE"],
 						yAxisID: "y",
 						parsing: {
 							yAxisKey: "taxRatePercentage",
@@ -313,7 +316,11 @@ function renderChart(data: any) {
 						title: {
 							display: true,
 							text: "Tax",
-							color: "red",
+							color: "#7550AE",
+							font: {
+								size: 16, // Hier die Schriftgröße ändern (z. B. 16px)
+								weight: "bold", // Falls du den Text fett machen möchtest
+							},
 						},
 					},
 					y1: {
@@ -323,7 +330,12 @@ function renderChart(data: any) {
 						max: Math.max(...data.map((o: any) => o.amount)) * 1.5,
 						title: {
 							display: true,
-							text: "$HARB Amount",
+							text: "Slots",
+                            color: "white",
+                            font: {
+								size: 16, // Hier die Schriftgröße ändern (z. B. 16px)
+								weight: "bold", // Falls du den Text fett machen möchtest
+							},
 						},
 						grid: {
 							display: false,
@@ -340,7 +352,12 @@ function renderChart(data: any) {
 						},
 						title: {
 							display: true,
-							text: "Staking Positions",
+							text: "Positions",
+                            color: "white",
+                            font: {
+								size: 16, // Hier die Schriftgröße ändern (z. B. 16px)
+								weight: "bold", // Falls du den Text fett machen möchtest
+							},
 						},
 					},
 				},
@@ -411,7 +428,7 @@ $margin: 72px
                 margin-left: auto
                 display: flex
         .chart--body
-            height: 600px !important
+            height: 300px !important
             position: relative
             &.disable-actions
                 pointer-events: none
@@ -422,12 +439,12 @@ $margin: 72px
                     left: 0
                     width: 100%
                     height: 100%
-                    background-color: rgba(255, 255, 255, 0.5) 
+                    background-color: rgba(255, 255, 255, 0.5)
                     z-index: 1
-                
+
                 &.dark
                     &::before
-                        background-color: rgba(0, 0, 0, 0.5) 
+                        background-color: rgba(0, 0, 0, 0.5)
             .chart--no-positions
                 color: var(--color-font)
                 font-size: 30px

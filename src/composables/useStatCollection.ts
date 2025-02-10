@@ -108,6 +108,25 @@ const stakeTotalSupply = computed(() => {
 	}
 });
 
+//Total Supply Change / 7d=mintedLastWeek−burnedLastWeek
+const totalSupplyChange7d = computed(() => {
+    if (rawStatsCollections.value?.length > 0) {
+		return BigInt(rawStatsCollections.value[0].mintedLastWeek - rawStatsCollections.value[0].burnedLastWeek)
+    } else {
+        return 0n
+    }
+});
+
+
+//totalsupply Change7d / harbtotalsupply 
+const inflation7d = computed(() => {
+    if (rawStatsCollections.value?.length > 0 && rawStatsCollections.value[0].harbTotalSupply > 0) {
+    return BigInt(rawStatsCollections.value[0].mintedLastWeek - rawStatsCollections.value[0].burnedLastWeek)
+    } else {
+        return 0n
+    }
+});
+
 
 export async function loadStats() {
 	loading.value = true;
@@ -152,9 +171,11 @@ export function useStatCollection() {
 	return reactive({
 		profit7d,
 		nettoToken7d,
+        inflation7d,
 		outstandingStake,
 		harbTotalSupply,
 		stakeTotalSupply,
+        totalSupplyChange7d,
 		initialized,
 	});
 }

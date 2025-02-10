@@ -10,7 +10,7 @@
 	>
 		<div class="output-left">
 			<div class="output-text">{{ props.name }}</div>
-			<div class="output-price number-big">
+			<div class="output-price">
 				<slot name="price">
 					{{ props.price }}
 				</slot>
@@ -48,9 +48,9 @@ const slots = useSlots();
         justify-content: center
     &.output--variant-1
         padding: 16px
-        border: 1px solid var(--color-grey)
+        border: 1px solid #2D2D2D
         border-radius: var(--border-radius, 12px)
-        background-color: var(--color-output-bg)
+        background-color: var(--color-input)
     &.output--variant-2
         border-bottom: 1px solid var(--color-grey)
         padding: 8px
@@ -61,6 +61,9 @@ const slots = useSlots();
         flex-direction: column
         gap: 8px
         text-align: left
+        .output-price
+            font-size: 18px
+            letter-spacing: 3px
         .output-text
             font-size: 14px
             font-weight: bold

@@ -40,7 +40,6 @@ onMounted(() => {
 
 <style lang="sass">
 .f-card
-    border: var(--card-border-width) var(--card-border-style) var(--card-border-color)
     border-radius: var(--card-border-radius)
     overflow: hidden
     height: 100%

@@ -2,12 +2,17 @@
 	<header>
 		<div class="navbar">
 			<div class="navbar-inner navigation-font">
-				<div class="navbar-icon">
-					<span class="pointer"><img src="@/assets/logo.svg" alt="Harb-Logo" /></span>
-				</div>
-				<div class="navbar-text">
-					<span class="pointer" @click="router.push('/')">HARBERG</span>
-				</div>
+				<div class="navbar-left" @click="router.push('/')">
+				<img src="@/assets/logo.png" alt="Logo" />
+				<div class="navbar-title">
+                    <span>K</span>
+                    <span class="big-spacing">r</span>
+                    <span class="small-spacing">A</span>
+                    <span class="big-spacing">I</span>
+                    <span>ken</span>
+                    
+                </div>
+			</div>
 				<div class="navbar-center"></div>
 				<div class="navbar-end">
 					<nav v-if="!isMobile">
@@ -16,8 +21,6 @@
 						</RouterLink>
 					</nav>
 					<template v-if="!isMobile">
-						<div class="vertical-line"></div>
-						<theme-toggle v-model="darkTheme"></theme-toggle>
 						<div class="vertical-line"></div>
 						<network-changer></network-changer>
 						<div class="vertical-line"></div>
@@ -108,6 +111,23 @@ header
                 a
                     text-decoration: none
                     color: white
+            .navbar-left
+                display: flex
+                gap: 8px
+                letter-spacing: 3.6px
+                align-items: center
+                font-size: 32px
+                font-weight: 400
+                &:hover, &:active, &:focus
+                    cursor: pointer
+                .navbar-title
+                    display: none
+                    @media (min-width: 768px)
+                        display: block
+                    .big-spacing
+                        letter-spacing: 5.76px
+                    .small-spacing
+                        letter-spacing: 1.8px
             .navbar-center
                 display: flex
                 margin-left: auto

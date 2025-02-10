@@ -24,12 +24,13 @@ const { address, status } = useAccount();
 
 <style lang="sass">
 :root,[data-theme="default"]
-    --color-connect-button--disconnected: var(--color-midnight-black)
+    --color-connect-button--disconnected: var(--color-primary)
     --font-color-connect-button--disconnected: var(--color-bright-white)
-    --color-connect-button--connected: var(--color-bright-white)
-    --font-color-connect-button--connected: var(--color-text-primary)
+    --color-connect-button--connected: unset
+    --font-color-connect-button--connected: var(--color-bright-white)
     --color-connect-button-border--connected: var(--color-grey)
-    --color-connect-button-hovered--connected: var(--color-bright-white-hovered)
+    --color-connect-button-hovered--connected: #060f18
+
 [data-theme="dark"]
     --color-connect-button--disconnected: var(--color-based-blue)
     --font-color-connect-button--disconnected: var(--color-bright-white)

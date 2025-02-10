@@ -1,9 +1,10 @@
 import { http, createConfig, createStorage } from "@wagmi/vue";
-import { baseSepolia } from "@wagmi/vue/chains";
+import { base } from "@wagmi/vue/chains";
 import { coinbaseWallet, walletConnect } from "@wagmi/vue/connectors";
+console.log("base", base);
 
 export const config = createConfig({
-	chains: [baseSepolia],
+	chains: [base],
 	storage: createStorage({ storage: window.localStorage }),
 
 	connectors: [
@@ -19,6 +20,6 @@ export const config = createConfig({
 		coinbaseWallet({ appName: "Harberg", darkMode: true }),
 	],
 	transports: {
-		[baseSepolia.id]: http(),
+		[base.id]: http(),
 	},
 });

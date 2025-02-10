@@ -55,9 +55,9 @@ async function switchNetwork(chain: any) {
 
 <style lang="sass">
 :root,[data-theme="default"]
-    --color-network-changer: var(--color-bright-white)
-    --color-network-changer-hovered: var(--color-bright-white-hovered)
-    --color-network-changer-toggle-icon: var(--color-text-primary)
+    --color-network-changer: unset
+    --color-network-changer-hovered: #060f18
+    --color-network-changer-toggle-icon: white
 
 [data-theme="dark"]
     --color-network-changer: var(--color-text-primary)
