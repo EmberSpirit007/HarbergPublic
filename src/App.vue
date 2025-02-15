@@ -10,10 +10,14 @@ import { RouterView, useRoute, useRouter } from "vue-router";
 import type { LayoutName } from '@/types/router';
 
 
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
+import NavbarLayout from '@/layouts/NavbarLayout.vue';
+
 const layouts = {
-  DefaultLayout: defineAsyncComponent(() => import('@/layouts/DefaultLayout.vue')),
-  NavbarLayout: defineAsyncComponent(() => import('@/layouts/NavbarLayout.vue')),
+  DefaultLayout,
+  NavbarLayout
 };
+
 import { computed, defineAsyncComponent, provide, ref } from "vue";
 
 const route = useRoute();

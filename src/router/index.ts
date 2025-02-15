@@ -30,18 +30,6 @@ const router = createRouter({
 			component: () => import("../views/LoginView.vue"),
 		},
 	],
-	scrollBehavior(to, from, savedPosition) {
-		// Überprüfen, ob der Zielort ein Hash enthält
-		if (to.hash) {
-			// Warten, bis die Komponente geladen ist und dann zum Ziel scrollen
-			return {
-				el: to.hash,
-				behavior: "smooth", // Optional: für sanftes Scrollen
-				top: 80,
-			};
-		}
-		return savedPosition || { top: 0 }; // Scrollen zum Anfang der Seite, falls kein Hash vorhanden ist
-	},
 });
 
 export default router;
