@@ -69,6 +69,7 @@ const openClose = () => {
             align-items: center
             .toggle-collapse
                 font-size: 25px
+                align-self: flex-start
                 g
                     path
                         fill: var(--color-expand-icon)

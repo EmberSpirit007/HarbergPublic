@@ -29,16 +29,16 @@ const props = withDefaults(defineProps<Props>(), {});
 .footer
     height: auto
     background-color: var(--midnight-black)
-    padding-bottom: 72px
     border-top: 0.5px solid
-    @media (min-width: 992px)
+    margin-top: auto
+    @media (min-width: 768px)
         height: 150px
         min-height: 150px
         display: flex
         flex-direction: column
         justify-content: center
         padding-bottom: unset
-        margin-top: auto
+        padding-bottom: 72px
     .footer-inner
         padding: 24px 0
         font-size: 24px
@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<Props>(), {});
         gap: 16px
         align-items: center
         border-top: 1px solid #000
-        @media (min-width: 992px)
+        @media (min-width: 768px)
             padding: 16px 0 24px 0
             justify-content: center
             border-top: unset

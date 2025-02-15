@@ -18,24 +18,27 @@
 									<div class="formular">
 										<div class="row row-1">
 											<f-input
-												label="Staking Amount $HARB"
+												label="Staking Amount"
 												class="staking-amount"
 												v-model="stake.stakingAmountNumber"
 											>
 												<template v-slot:details>
-													<div>Balance: {{ maxStakeAmount.toFixed(2) }} $HARB</div>
+													<div class="balance">Balance: {{ maxStakeAmount.toFixed(2) }} $HARB</div>
 													<div @click="setMaxAmount" class="staking-amount-max">
 														<b>Max</b>
 													</div>
 												</template>
 											</f-input>
-                                            <Icon class="stake-arrow" icon="mdi:chevron-right"></Icon>
+                                            <Icon class="stake-arrow" icon="mdi:chevron-triple-right"></Icon>
 											<f-input
 												label="Owner Slots"
 												class="staking-amount"
                                                 disabled
 												:modelValue="`${(Number(supplyFreeze) * 1000).toFixed(2)}(${supplyFreeze})`"
 											>
+                                            <template #info>
+                                                Slots correspond to a percentage of ownership in the protocol.<br /><br />1,000 Slots = 1% Ownership<br /><br />When you unstake you get the exact percentage of the current $KRK total supply. When the total supply increased since you staked you get more tokens back than before.
+                                            </template>
 											</f-input>
 											<!-- <f-select :items="adjustTaxRate.taxRates" label="Tax" v-model="taxRate">
 											<template v-slot:info>
@@ -47,14 +50,12 @@
 										<div class="row row-2">
 											<f-select :items="adjustTaxRate.taxRates" label="Tax" v-model="taxRate">
 												<template v-slot:info>
-													The tax you have to pay to keep your staking position open. The tax
-													is calculated on a yearly basis but paid continuously.
+													The yearly tax you have to pay to keep your slots open. The tax is paid when unstaking or manually in the dashboard. If someone pays a higher tax they can buy you out. 
 												</template>
 											</f-select>
 											<f-input label="Floor Tax" disabled :modelValue="floorTax">
 												<template v-slot:info>
-													You need at least a certain amount based on the available staking
-													positions and total supply.
+                                                    This is the current minimum tax you have to pay to claim owner slots from other owners.
 												</template>
 											</f-input>
 											<f-input
@@ -63,8 +64,7 @@
 												:modelValue="snatchPositions.length"
 											>
 												<template v-slot:info>
-													You need at least a certain amount based on the available staking
-													positions and total supply.
+													This shows you the numbers of staking positions you buy out from current owners by paying a higher tax. If you get bought out yourself by new owners you get paid out the current market value of your position incl. your profits. 
 												</template>
 											</f-input>
 										</div>
@@ -146,14 +146,13 @@ import {
 } from "@/utils/helper";
 // import StatsOutput from "@/components/molecules/StatsOutput.vue";
 // import ChartJs from "@/components/ChartJs.vue";
-import CollapseActive from "@/components/collapse/CollapseActive.vue";
-import CollapseHistory from "@/components/collapse/CollapseHistory.vue";
+// import CollapseActive from "@/components/collapse/CollapseActive.vue";
+// import CollapseHistory from "@/components/collapse/CollapseHistory.vue";
 // import { bytesToUint256, uint256ToBytes } from "harb-lib";
 // import { getSnatchList } from "harb-lib/dist/";
 import { formatUnits } from "viem";
 import axios from "axios";
 import { useAccount } from "@wagmi/vue";
-import { getChainId, getChains, type Config } from "@wagmi/core";
 import { loadActivePositions, usePositions, type Position } from "@/composables/usePositions";
 
 import { useChain } from "@/composables/useChain";
@@ -163,8 +162,6 @@ import { useClaim } from "@/composables/useClaim";
 import { useAdjustTaxRate } from "@/composables/useAdjustTaxRates";
 
 // import { minStake } from "@/contracts/stake";
-import { totalSupply, getTotalSupply } from "@/contracts/stake";
-import { totalSupply as totalSupplyHarb, getTotalSupply as getTotalSupplyHarb } from "@/contracts/harb";
 import { useWallet } from "@/composables/useWallet";
 import { ref, onMounted, watch, computed, inject } from "vue";
 import { useStatCollection } from "@/composables/useStatCollection";
@@ -215,6 +212,10 @@ const supplyFreeze = computed(() => {
 	if (!stake.stakingAmount) {
 		return 0;
 	}
+    console.log("stake.stakingAmount", stake.stakingAmount);
+    console.log("statCollection.harbTotalSupply", statCollection.harbTotalSupply);
+    
+    
 	return ((Number(stake.stakingAmount) / Number(statCollection.harbTotalSupply)) * 100).toFixed(4);
 });
 
@@ -398,7 +399,10 @@ const snatchPositions = computed(() => {
                                 display: flex
                                 gap: 8px
                                 justify-content: flex-end
+                                color: #9A9898
+                                font-size: 14px
                                 .staking-amount-max
+                                    font-weight: 600
                                     &:hover, &:active, &:focus
                                         cursor: pointer
                     .row-2
@@ -411,4 +415,5 @@ const snatchPositions = computed(() => {
                         //     flex: 0 1 28%
 .stake-arrow
     align-self: center
+    font-size: 30px
 </style>

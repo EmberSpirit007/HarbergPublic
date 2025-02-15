@@ -16,14 +16,14 @@
 			<div class="connected-tokens">
 				<f-output name="$HARB" :price="harbAmount" :variant="3">
 					<template #end>
-						<f-button invert size="small" dense
+						<f-button size="small" dense
 							><a :href="chain.chainData?.uniswap" target="_blank">Buy</a></f-button
 						>
 					</template>
 				</f-output>
 				<f-output name="Staked $HARB" :price="compactNumber(stakedAmount)" :variant="3">
 					<template #end>
-						<f-button invert size="small" dense @click="stakeLink">Stake</f-button>
+						<f-button size="small" dense @click="stakeLink">Stake</f-button>
 					</template>
 				</f-output>
 			</div>
@@ -193,7 +193,7 @@ function stakeLink() {
                 padding: 0 8px
                 align-self: center
                 font-size: 16px
-                @media (min-width: 992px)
+                @media (min-width: 768px)
                     font-size: 18px
 
 

@@ -95,7 +95,7 @@ function setFocus(event:MouseEvent){
     flex-direction: column
     .info-icon
         position: static
-        @media (min-width: 992px)
+        @media (min-width: 768px)
             position: relative
     .f-input-label
         display: flex
@@ -108,7 +108,9 @@ function setFocus(event:MouseEvent){
         width: 100%
         background-color: #2D2D2D
         &.f-input__wrapper--focused
-            box-shadow: 0 0 0 1px black
+            outline: none
+            border: 1px solid #7550AE 
+            box-shadow: 0 0 5px #7550AE
         input
             border: 0
             border-radius: 12px

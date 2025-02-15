@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="flex123">
+		<div class="slider-wrapper">
 			<div class="disabled-slider" :style="{ 'flex-basis': minPercentage + '%' }">
 				<div class="dot"></div>
 			</div>
@@ -67,7 +67,20 @@ const sliderValue = computed({
 });
 
 const percentageDot = computed(() => {
-	return (100 * (sliderValue.value - props.min)) / (props.max - props.min);
+    console.log("sliderValue.value", sliderValue.value);
+    let percentage = (100 * (sliderValue.value - props.min)) / (props.max - props.min);
+    console.log("percentage", percentage);
+    
+    if(percentage < 20){
+        percentage = percentage + 1;
+    } else if(percentage > 50){
+        percentage = percentage - 2;
+    } else if(percentage > 80){
+        percentage = percentage - 3;
+    }
+    console.log("percentage-final", percentage);
+    
+	return percentage
 });
 
 const settings = {
@@ -96,7 +109,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-.flex123 {
+.slider-wrapper {
 	display: flex;
 }
 .testbla {
@@ -157,6 +170,7 @@ $range-label-width: 60px !default;
 .range-slider {
 	width: $range-width;
 	position: relative;
+    accent-color: #7550AE;
 }
 
 .range-slider__range {
@@ -172,8 +186,10 @@ $range-label-width: 60px !default;
 	// Range Handle
 	&::-webkit-slider-thumb {
 		appearance: none;
-		width: 25px;
-		height: 25px;
+		width: 30px;
+		height: 30px;
+        opacity: 0;
+        padding: 5px;
 		border-radius: 50%;
 		cursor: pointer;
 	}

@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const classObject = computed(() => ({
+	"f-btn--tiny": props.size === "tiny",
 	"f-btn--small": props.size === "small",
 	"f-btn--medium": props.size === "medium",
 	"f-btn--large": props.size === "large",
@@ -62,6 +63,10 @@ const styleObject = computed(() => {
     justify-content: center
     font-weight: bold
     font-size: var(--font-size-button-medium)
+    &.f-btn--tiny
+        font-size: 13px
+        letter-spacing: 0.46px
+        padding: 4px 16px
     &.f-btn--small
         font-size: var(--font-size-button-small)
         letter-spacing: 0.46px
@@ -103,5 +108,5 @@ const styleObject = computed(() => {
             background-color: var(--color)
     &:hover,&:focus,&:active
         cursor: pointer
-        background-color: var(--color-button-bg--hovered)
+        background-color: #5f4884
 </style>

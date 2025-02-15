@@ -53,6 +53,6 @@ const { address, status } = useAccount();
         border: 1px solid var(--color-connect-button-border--connected)
         color: var(--font-color-connect-button--connected)
         &:hover, &:focus, &:active
-            background-color: var(--color-connect-button-hovered--connected)
+            background-color: #5f4884
             cursor: pointer
 </style>

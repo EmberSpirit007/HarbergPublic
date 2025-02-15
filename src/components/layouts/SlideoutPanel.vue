@@ -40,7 +40,7 @@ const showPanel = inject("showPanel");
     margin-bottom: -100vh
     bottom: 0
     overflow: auto
-    @media (min-width: 992px)
+    @media (min-width: 768px)
         margin-right: -400px
         transition: margin-right 250ms ease 0s
         width: auto
@@ -48,20 +48,20 @@ const showPanel = inject("showPanel");
         top: 0
     &.open
         margin-bottom: -82px
-        @media (min-width: 992px)
+        @media (min-width: 768px)
             margin-right: 30px
     .slideout-panel
         width: 100%
-        height: 100%
         padding: 24px 24px 16px 24px
         overflow: scroll
         // height: calc( 100svh - 82px )
         display: flex
         flex-direction: column
-        height: 100%
-        @media (min-width: 992px)
+        height: calc( 100vh - 80px)
+        @media (min-width: 768px)
             width: 400px
             overflow: unset
+            height: 100%
         .slideout-icon
             cursor: pointer
             &:hover, &:active, &:focus

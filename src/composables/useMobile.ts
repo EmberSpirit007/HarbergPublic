@@ -10,7 +10,7 @@ export function useMobile() {
 
 	isMobile.value = isMobileFunc();
 	function isMobileFunc() {
-		if (screen.width <= 900) {
+		if (screen.width <= 768) {
 			return true;
 		} else {
 			return false;

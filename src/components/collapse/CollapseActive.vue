@@ -4,7 +4,8 @@
 			<div class="collapse-header">
 				<div class="collapse-header-row1">
 					<div><span class="subheader2">Tax</span> {{ props.taxRate }} %</div>
-					<div class="">
+                    <f-button size="tiny" @click="payTax(props.id)">Pay Tax</f-button>
+					<div class="position-id">
 						<span class="subheader2">ID</span> <span class="number-small">{{ props.id }}</span>
 					</div>
 				</div>
@@ -98,7 +99,7 @@ import { compactNumber, formatBigNumber } from "@/utils/helper";
 import { useUnstake } from "@/composables/useUnstake";
 import { useAdjustTaxRate } from "@/composables/useAdjustTaxRates";
 import { computed, ref, onMounted } from "vue";
-import { getTaxDue } from "@/contracts/stake";
+import { getTaxDue, payTax } from "@/contracts/stake";
 import { type Position, loadPositions } from "@/composables/usePositions";
 import { useStatCollection } from "@/composables/useStatCollection";
 
@@ -188,6 +189,7 @@ const filteredTaxRates = computed(() => adjustTaxRate.taxRates.filter((obj) => o
 @use 'collapse'
 .f-collapse
     &.f-collapse-active
+        background-color: #07111B
         .collapse-header
             width: 100%
             display: flex
@@ -198,8 +200,12 @@ const filteredTaxRates = computed(() => adjustTaxRate.taxRates.filter((obj) => o
             .collapse-header-row1
                 display: flex
                 flex-direction: row
-                justify-content: space-between
-                margin-right: 32px
+                gap: 16px
+                align-items: center
+                // margin-right: 32px
+                
+                .position-id
+                    margin-left: auto
             .collapse-header-row2
                 display: flex
                 justify-content: space-between
@@ -225,10 +231,16 @@ const filteredTaxRates = computed(() => adjustTaxRate.taxRates.filter((obj) => o
             justify-content: space-between
         .profit-stats-wrapper
             display: flex
-            width: 50%
+            
             flex-direction: column
             gap: 4px
-            margin: 4px auto 0 0
+            margin: 0
+            margin-top: 4px
+            width: 100%
+            color: white
+            @media (min-width: 768px)
+                width: 50%
+                margin: 4px auto 0 0
             .profit-stats-item
                 display: grid
                 grid-template-columns: 1fr 1fr

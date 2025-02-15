@@ -172,32 +172,36 @@ watch(
 );
 
 const externalTooltipHandler = (context: any) => {
-	// Tooltip Element
-	const linear = context.chart.boxes[0];
-	const { chart, tooltip } = context;
+    const { chart, tooltip } = context;
+    const tooltipEl = tooltipRef.value;
 
-	const tooltipEl = tooltipRef.value;
+    // Tooltip ausblenden, wenn keine Daten angezeigt werden sollen
+    if (!tooltip.opacity) {
+        tooltipEl.style.opacity = "0";
+        tooltipEl.style.display = "none";
+        return;
+    }
 
-	// Hide if no tooltip
-	if (tooltip.opacity === 0) {
-		tooltipEl.style.opacity = 0;
-		tooltipEl.style.display = "none";
-		return;
-	}
-	activePosition.value = tooltip.dataPoints[0].element.$context.raw;
+    // Aktive Position setzen (Daten des angezeigten Punktes)
+    activePosition.value = tooltip.dataPoints[0].element.$context.raw;
 
-	const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+    // Positionierung des Tooltips
+    const { offsetLeft: chartX, offsetTop: chartY } = chart.canvas;
 
-	// Display, position, and set styles for font
+    // Tooltip anpassen
+    tooltipEl.style.opacity = "1";
+    tooltipEl.style.display = "flex";
+    tooltipEl.style.position = "absolute";
 
-	tooltipEl.style.opacity = 1;
-	tooltipEl.style.display = "flex";
-	tooltipEl.style.top = linear.bottom;
-	tooltipEl.style.right = linear.right;
-	tooltipEl.style.left = positionX + tooltip.caretX + "px";
-	tooltipEl.style.top = positionY + tooltip._eventPosition.y + "px";
-	tooltipEl.style.font = tooltip.options.bodyFont.string;
+    // Tooltip mittig über dem Punkt platzieren
+    tooltipEl.style.left = `${chartX + tooltip.caretX}px`; 
+    tooltipEl.style.top = `${chartY + tooltip.y}px`;
+
+    // Tooltip für saubere Mitte ausrichten
+    tooltipEl.style.transform = "translateX(-50%)";  
+    tooltipEl.style.pointerEvents = "none";
 };
+
 
 function renderChart(data: any) {
 	console.log("renderChart");

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import { authGuard } from './authGuard';
 
 const router = createRouter({
 	history: createWebHashHistory(),
@@ -15,17 +16,18 @@ const router = createRouter({
 			meta: {
 				title: "Stake",
 				group: "navbar",
+                layout: 'NavbarLayout'
 			},
+            beforeEnter: authGuard,
 			component: () => import("../views/StakeView.vue"),
 		},
 		{
-			path: "/graph",
-			name: "graph",
-			meta: {
-				title: "Graph",
-				group: "navbar",
-			},
-			component: () => import("../views/GraphView.vue"),
+			path: "/login",
+			name: "login",
+            meta: {
+                layout: 'DefaultLayout'
+,           },
+			component: () => import("../views/LoginView.vue"),
 		},
 	],
 	scrollBehavior(to, from, savedPosition) {

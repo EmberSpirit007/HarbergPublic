@@ -139,5 +139,14 @@ export async function getTaxDue(positionID: bigint) {
 	return result as bigint;
 }
 
+export async function payTax(positionID: bigint) {
+    console.log("payTax", positionID);
 
-
+	const result = await writeContract(config as any, {
+		abi: StakeContract.abi,
+		address: StakeContract.contractAddress,
+		functionName: "payTax",
+		args: [positionID],
+	});
+	return result;
+}

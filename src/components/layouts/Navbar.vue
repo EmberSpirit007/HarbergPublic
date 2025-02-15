@@ -19,6 +19,7 @@
 						<RouterLink v-for="navbarRoute in navbarRoutes" :key="navbarRoute.name" :to="navbarRoute.path">
 							{{ navbarRoute.title }}
 						</RouterLink>
+                        <a href="https://emberspirit007.github.io/KraikenLanding/#/docs/Introduction" target="_blank">Docs</a>
 					</nav>
 					<template v-if="!isMobile">
 						<div class="vertical-line"></div>
@@ -26,11 +27,11 @@
 						<div class="vertical-line"></div>
 					</template>
 					<connect-button @click="showPanel = true" v-if="!isMobile"></connect-button>
-					<icon-login @click="showPanel = true" v-else-if="isMobile && !account?.address"></icon-login>
+					<icon-login @click="showPanel = true" v-else-if="isMobile && !address"></icon-login>
 					<img
 						@click="showPanel = true"
-						v-else-if="isMobile && account?.address"
-						:src="getBlocky(account.address)"
+						v-else-if="isMobile && address"
+						:src="getBlocky(address)"
 						alt="avatar"
 					/>
 				</div>
@@ -50,7 +51,7 @@ import { computed, inject, ref } from "vue";
 import { useAccount } from "@wagmi/vue";
 import { useDark } from "@/composables/useDark";
 const {darkTheme} = useDark();
-const account = useAccount();
+const {address} = useAccount();
 const router = useRouter();
 
 
@@ -89,14 +90,14 @@ header
             box-sizing: border-box
             height: 100%
             align-items: center
-            @media (min-width: 992px)
+            @media (min-width: 768px)
                 padding: 16px 24px
             .navbar-icon
                 margin-right: 16px
                 img
                     height: 50px
                     width: 50px
-                    @media (min-width: 992px)
+                    @media (min-width: 768px)
                         height: 56px
                         width: 56px
 
@@ -106,7 +107,7 @@ header
                 font-family: "Play-Bold"
                 font-weight: bold
 
-                @media (min-width: 992px)
+                @media (min-width: 768px)
                     font-size: 40px
                 a
                     text-decoration: none

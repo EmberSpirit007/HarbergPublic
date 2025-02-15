@@ -9,12 +9,14 @@ interface BlockiesOpt {
 	spotcolor?: string;
 }
 
-export function getBlocky(address: any) {
-	if (!address) {
+export function getBlocky(address: string) {
+	if (!address || typeof address !== "string" ) {
 		return;
 	}
+    console.log("address", address);
+    
 	var blockiesData = createIcon({
-		seed: address.toLowerCase(),
+		seed: address?.toLowerCase(),
 		size: 8,
 		scale: 4,
 	}).toDataURL();
