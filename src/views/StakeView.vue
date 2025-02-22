@@ -16,7 +16,7 @@
             <h3>Statistics</h3>
            
 		<div class="statistics-outputs-wrapper">
-			<stats-output headline="Average Slot Tax" :price="`${stats.inflation7d}%`"></stats-output>
+			<stats-output headline="Average Slot Tax" :price="`${averageTax}%`"></stats-output>
 			<stats-output headline="Claimed Owner Slots" price="10,510 / 20,000"></stats-output>
 			<stats-output
 				headline="Total Supply Change / 7d"
@@ -49,13 +49,22 @@ import StakeHolder from "@/components/StakeHolder.vue";
 import ChartComplete from "@/components/chart/ChartComplete.vue";
 import StatsOutput from "@/components/StatsOutput.vue";
 import CollapseActive from "@/components/collapse/CollapseActive.vue";
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useStatCollection } from "@/composables/useStatCollection";
 import IconInfo from "@/components/icons/IconInfo.vue";
 // todo interface positions
 import { usePositions } from "@/composables/usePositions";
 
-const { myActivePositions, tresholdValue } = usePositions();
+const { myActivePositions, tresholdValue, activePositions } = usePositions();
+
+
+const averageTax = computed(() => {
+    if (activePositions.value.length === 0) return 0;
+    const totalTax = activePositions.value.reduce((sum, pos) => sum + (pos.taxRatePercentage || 0), 0);
+    return totalTax / activePositions.value.length;
+
+})
+
 
 const stats = useStatCollection();
 onMounted(async () => {});
