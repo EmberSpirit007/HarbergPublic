@@ -48,7 +48,7 @@ export function useUnstake() {
 			const data = await waitForTransactionReceipt(config as any, {
 				hash: hash,
 			});
-            
+
 			const topics: any = decodeEventLog({
 				abi: StakeContract.StakeContract.abi,
 				data: data.logs[2].data,
@@ -60,7 +60,7 @@ export function useUnstake() {
 			const amount = compactNumber(
 				formatBigIntDivision(eventArgs.harbergPayout, 10n ** BigInt(wallet.balance.decimals))
 			);
-			contractToast.showSuccessToast(amount, "Success!", "You unstaked", "", "$HARB");
+			contractToast.showSuccessToast(amount, "Success!", "You unstaked", "", "$KrAIken");
 
 			waiting.value = false;
 			wallet.loadBalance();

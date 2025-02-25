@@ -18,8 +18,8 @@
 			</div>
 			<div class="info-popup__body2" v-if="props.info" v-html="props.info"></div>
 			<div class="info-popup__footer">
-                <f-button light block small @click="closeToast">Okay</f-button>
-            </div>
+				<f-button light block small @click="closeToast">Okay</f-button>
+			</div>
 		</div>
 		<!-- <div class="body">
 			<h6 class="header">test{{ props.header }}</h6>
@@ -45,39 +45,39 @@ const props = defineProps({
 	subheader: String,
 	info: String,
 	token: String,
-    type: String
+	type: String,
 });
 
 const bgcolor = computed(() => {
-    let color = "white";
-    console.log("props.type");
-    console.log(props.type);
-    switch (props.type) {
-        case "info":
-            color = "#1A54F4";
-            break;
-        case "error":
-            color =  "#8B0000";
-            break;
-        default:
-            break;
-    }
-    return color
-})
+	let color = "white";
+	console.log("props.type");
+	console.log(props.type);
+	switch (props.type) {
+		case "info":
+			color = "#5f4884";
+			break;
+		case "error":
+			color = "#8B0000";
+			break;
+		default:
+			break;
+	}
+	return color;
+});
 
 // element.classList.add("toast-open");
 const toast = useToast();
 
 const instance = getCurrentInstance();
-    instance!.parent!.parent!.vnode!.el!.classList.add("toast-open");
-    const id = instance!.attrs["toast-id"] as ToastID;
-    
-    console.log("instance", instance!.attrs["toast-id"]);
+instance!.parent!.parent!.vnode!.el!.classList.add("toast-open");
+const id = instance!.attrs["toast-id"] as ToastID;
+
+console.log("instance", instance!.attrs["toast-id"]);
 
 function closeToast() {
-        instance!.parent!.parent!.vnode!.el!.classList.remove("toast-open");
-        toast.dismiss(id);
-    }
+	instance!.parent!.parent!.vnode!.el!.classList.remove("toast-open");
+	toast.dismiss(id);
+}
 </script>
 <style lang="sass">
 .info-popup

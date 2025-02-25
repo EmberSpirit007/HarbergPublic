@@ -4,7 +4,7 @@
 			<div class="collapse-header">
 				<div class="collapse-header-row1">
 					<div><span class="subheader2">Tax</span> {{ props.taxRate }} %</div>
-                    <f-button size="tiny" @click="payTax(props.id)">Pay Tax</f-button>
+					<f-button size="tiny" @click="payTax(props.id)">Pay Tax</f-button>
 					<div class="position-id">
 						<span class="subheader2">ID</span> <span class="number-small">{{ props.id }}</span>
 					</div>
@@ -13,7 +13,7 @@
 					<div>
 						<div class="profit-stats-item">
 							<div><b>Initial Stake</b></div>
-							<div>{{ compactNumber(props.amount) }} $HARB</div>
+							<div>{{ compactNumber(props.amount) }} $KrAIken</div>
 						</div>
 					</div>
 					<div class="tags-list">
@@ -22,7 +22,7 @@
 				</div>
 				<!-- <div class="collapse-amount">
 					<span class="number-small">{{ compactNumber(props.amount) }}</span>
-					<span class="caption"> $HARB</span>
+					<span class="caption"> $KrAIken</span>
 				</div> -->
 			</div>
 		</template>
@@ -30,15 +30,15 @@
 			<div class="profit-stats-wrapper">
 				<div class="profit-stats-item">
 					<div><b>Tax Paid</b></div>
-					<div>{{ taxPaidGes }} $HARB</div>
+					<div>{{ taxPaidGes }} $KrAIken</div>
 				</div>
 				<div class="profit-stats-item">
 					<div><b>Issuance Earned</b></div>
-					<div>{{ profit }} $HARB</div>
+					<div>{{ profit }} $KrAIken</div>
 				</div>
 				<div class="profit-stats-item profit-stats-total">
 					<div><b>Total</b></div>
-					<div>{{ total.toFixed(5) }} $HARB</div>
+					<div>{{ total.toFixed(5) }} $KrAIken</div>
 				</div>
 			</div>
 		</div>
@@ -174,15 +174,13 @@ async function loadActivePositionData() {
 
 onMounted(() => {
 	const taxRate = adjustTaxRate.taxRates.find((obj) => obj.index === props.position.taxRateIndex + 1);
-    
-    
+
 	if (taxRate) {
 		newTaxRate.value = taxRate.year;
 	}
 });
 
-const filteredTaxRates = computed(() => adjustTaxRate.taxRates.filter((obj) => obj.year > props.taxRate))
-
+const filteredTaxRates = computed(() => adjustTaxRate.taxRates.filter((obj) => obj.year > props.taxRate));
 </script>
 
 <style lang="sass">
@@ -203,7 +201,7 @@ const filteredTaxRates = computed(() => adjustTaxRate.taxRates.filter((obj) => o
                 gap: 16px
                 align-items: center
                 // margin-right: 32px
-                
+
                 .position-id
                     margin-left: auto
             .collapse-header-row2
@@ -231,7 +229,7 @@ const filteredTaxRates = computed(() => adjustTaxRate.taxRates.filter((obj) => o
             justify-content: space-between
         .profit-stats-wrapper
             display: flex
-            
+
             flex-direction: column
             gap: 4px
             margin: 0

@@ -162,7 +162,7 @@ export function useStake() {
 				"Success!",
 				"You Staked",
 				"Check your positions on the<br /> Staker Dashboard",
-				"$HARB"
+				"$KrAIken"
 			);
 
 			waiting.value = false;

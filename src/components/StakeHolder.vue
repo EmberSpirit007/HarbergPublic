@@ -1,103 +1,106 @@
 <template>
 	<div class="hold-stake-wrapper">
 		<f-card class="inner-border">
-					<div class="hold-inner">
-							<div class="stake-inner">
-								<template v-if="!statCollection.initialized">
-									<div>
-										<f-loader></f-loader>
-									</div>
-								</template>
-								<template v-else>
-									<div class="subheader2">Token Amount</div>
-									<FSlider
-										:min="minStakeAmount"
-										:max="maxStakeAmount"
-										v-model="stake.stakingAmountNumber"
-									></FSlider>
-									<div class="formular">
-										<div class="row row-1">
-											<f-input
-												label="Staking Amount"
-												class="staking-amount"
-												v-model="stake.stakingAmountNumber"
-											>
-												<template v-slot:details>
-													<div class="balance">Balance: {{ maxStakeAmount.toFixed(2) }} $HARB</div>
-													<div @click="setMaxAmount" class="staking-amount-max">
-														<b>Max</b>
-													</div>
-												</template>
-											</f-input>
-                                            <Icon class="stake-arrow" icon="mdi:chevron-triple-right"></Icon>
-											<f-input
-												label="Owner Slots"
-												class="staking-amount"
-                                                disabled
-												:modelValue="`${(Number(supplyFreeze) * 1000).toFixed(2)}(${supplyFreeze})`"
-											>
-                                            <template #info>
-                                                Slots correspond to a percentage of ownership in the protocol.<br /><br />1,000 Slots = 1% Ownership<br /><br />When you unstake you get the exact percentage of the current $KRK total supply. When the total supply increased since you staked you get more tokens back than before.
-                                            </template>
-											</f-input>
-											<!-- <f-select :items="adjustTaxRate.taxRates" label="Tax" v-model="taxRate">
+			<div class="hold-inner">
+				<div class="stake-inner">
+					<template v-if="!statCollection.initialized">
+						<div>
+							<f-loader></f-loader>
+						</div>
+					</template>
+					<template v-else>
+						<div class="subheader2">Token Amount</div>
+						<FSlider
+							:min="minStakeAmount"
+							:max="maxStakeAmount"
+							v-model="stake.stakingAmountNumber"
+						></FSlider>
+						<div class="formular">
+							<div class="row row-1">
+								<f-input
+									label="Staking Amount"
+									class="staking-amount"
+									v-model="stake.stakingAmountNumber"
+								>
+									<template v-slot:details>
+										<div class="balance">Balance: {{ maxStakeAmount.toFixed(2) }} $KrAIken</div>
+										<div @click="setMaxAmount" class="staking-amount-max">
+											<b>Max</b>
+										</div>
+									</template>
+								</f-input>
+								<Icon class="stake-arrow" icon="mdi:chevron-triple-right"></Icon>
+								<f-input
+									label="Owner Slots"
+									class="staking-amount"
+									disabled
+									:modelValue="`${stakeSlots}(${supplyFreeze.toFixed(2)})`"
+								>
+									<template #info>
+										Slots correspond to a percentage of ownership in the protocol.<br /><br />1,000
+										Slots = 1% Ownership<br /><br />When you unstake you get the exact percentage of
+										the current $KRK total supply. When the total supply increased since you staked
+										you get more tokens back than before.
+									</template>
+								</f-input>
+								<!-- <f-select :items="adjustTaxRate.taxRates" label="Tax" v-model="taxRate">
 											<template v-slot:info>
 												The tax you have to pay to keep your staking position open. The tax is
 												calculated on a yearly basis but paid continuously.
 											</template>
 										</f-select> -->
-										</div>
-										<div class="row row-2">
-											<f-select :items="adjustTaxRate.taxRates" label="Tax" v-model="taxRate">
-												<template v-slot:info>
-													The yearly tax you have to pay to keep your slots open. The tax is paid when unstaking or manually in the dashboard. If someone pays a higher tax they can buy you out. 
-												</template>
-											</f-select>
-											<f-input label="Floor Tax" disabled :modelValue="floorTax">
-												<template v-slot:info>
-                                                    This is the current minimum tax you have to pay to claim owner slots from other owners.
-												</template>
-											</f-input>
-											<f-input
-												label="Positions Buyout"
-												disabled
-												:modelValue="snatchPositions.length"
-											>
-												<template v-slot:info>
-													This shows you the numbers of staking positions you buy out from current owners by paying a higher tax. If you get bought out yourself by new owners you get paid out the current market value of your position incl. your profits. 
-												</template>
-											</f-input>
-										</div>
-									</div>
-								</template>
-                                <f-button v-if="status === 'disconnected'" @click="showPanel = true" size="large" block
-                                >Connect Wallet</f-button>
-								<f-button size="large" disabled block v-else-if="stake.state === 'NoBalance'"
-									>Insufficient Balance</f-button
-								>
-								<f-button
-									size="large"
-									block
-									v-else-if="stake.state === 'StakeAble' && snatchPositions.length === 0"
-									@click="stakeSnatch"
-									>Stake</f-button
-								>
-								<f-button
-									size="large"
-									block
-									v-else-if="stake.state === 'StakeAble' && snatchPositions.length > 0"
-									@click="stake.snatch(stake.stakingAmount, taxRate)"
-									>Snatch and Stake</f-button
-								>
-								<f-button size="large" outlined block v-else-if="stake.state === 'SignTransaction'"
-									>Sign Transaction ...</f-button
-								>
-								<f-button size="large" outlined block v-else-if="stake.state === 'Waiting'"
-									>Waiting ...</f-button
-								>
 							</div>
-						
-						<!-- <template v-if="myActivePositions.length > 0 && status === 'connected'">
+							<div class="row row-2">
+								<f-select :items="adjustTaxRate.taxRates" label="Tax" v-model="taxRate">
+									<template v-slot:info>
+										The yearly tax you have to pay to keep your slots open. The tax is paid when
+										unstaking or manually in the dashboard. If someone pays a higher tax they can
+										buy you out.
+									</template>
+								</f-select>
+								<f-input label="Floor Tax" disabled :modelValue="floorTax">
+									<template v-slot:info>
+										This is the current minimum tax you have to pay to claim owner slots from other
+										owners.
+									</template>
+								</f-input>
+								<f-input label="Positions Buyout" disabled :modelValue="snatchPositions.length">
+									<template v-slot:info>
+										This shows you the numbers of staking positions you buy out from current owners
+										by paying a higher tax. If you get bought out yourself by new owners you get
+										paid out the current market value of your position incl. your profits.
+									</template>
+								</f-input>
+							</div>
+						</div>
+					</template>
+					<f-button v-if="status === 'disconnected'" @click="showPanel = true" size="large" block
+						>Connect Wallet</f-button
+					>
+					<f-button size="large" disabled block v-else-if="stake.state === 'NoBalance'"
+						>Insufficient Balance</f-button
+					>
+					<f-button
+						size="large"
+						block
+						v-else-if="stake.state === 'StakeAble' && snatchPositions.length === 0"
+						@click="stakeSnatch"
+						>Stake</f-button
+					>
+					<f-button
+						size="large"
+						block
+						v-else-if="stake.state === 'StakeAble' && snatchPositions.length > 0"
+						@click="stake.snatch(stake.stakingAmount, taxRate)"
+						>Snatch and Stake</f-button
+					>
+					<f-button size="large" outlined block v-else-if="stake.state === 'SignTransaction'"
+						>Sign Transaction ...</f-button
+					>
+					<f-button size="large" outlined block v-else-if="stake.state === 'Waiting'">Waiting ...</f-button>
+				</div>
+
+				<!-- <template v-if="myActivePositions.length > 0 && status === 'connected'">
 							<h5>Your Active Positions</h5>
 							<collapse-active
 								v-for="position in myActivePositions"
@@ -122,7 +125,7 @@
 								:position="position"
 							></collapse-history>
 						</template> -->
-					</div>
+			</div>
 		</f-card>
 	</div>
 </template>
@@ -138,12 +141,7 @@ import FSlider from "@/components/fcomponents/FSlider.vue";
 import FCard from "@/components/fcomponents/FCard.vue";
 import FOutput from "@/components/fcomponents/FOutput.vue";
 import { Icon } from "@iconify/vue";
-import {
-	formatBigIntDivision,
-	InsertCommaNumber,
-	formatBigNumber,
-	bigInt2Number,
-} from "@/utils/helper";
+import { formatBigIntDivision, InsertCommaNumber, formatBigNumber, bigInt2Number } from "@/utils/helper";
 // import StatsOutput from "@/components/molecules/StatsOutput.vue";
 // import ChartJs from "@/components/ChartJs.vue";
 // import CollapseActive from "@/components/collapse/CollapseActive.vue";
@@ -168,6 +166,7 @@ import { useStatCollection } from "@/composables/useStatCollection";
 import { useRoute } from "vue-router";
 const chain = useChain();
 const route = useRoute();
+
 const showPanel = inject("showPanel");
 const darkTheme: boolean | undefined = inject("darkTheme");
 const adjustTaxRate = useAdjustTaxRate();
@@ -208,15 +207,37 @@ const harbAmount = computed(() => {
 	}
 });
 
+// const supplyFreeze = computed(() => {
+// 	if (!stake.stakingAmount) {
+// 		return 0;
+// 	}
+// 	console.log("stake.stakingAmount", stake.stakingAmount);
+
+// 	console.log("Number(stake.stakingAmount * 10n ** 18n)", Number(stake.stakingAmount * 10n ** 18n));
+// 	console.log("Number(statCollection.stakeTotalSupply)", Number(statCollection.stakeTotalSupply));
+// 	console.log(
+// 		" (Number(stake.stakingAmount * 10n ** 18n) / Number(statCollection.stakeTotalSupply))",
+// 		Number(stake.stakingAmount) / Number(statCollection.stakeTotalSupply)
+// 	);
+// 	console.log("Number(statCollection.stakeTotalSupply)", Number(statCollection.stakeTotalSupply));
+
+// 	return (Number(stake.stakingAmount) / Number(statCollection.stakeTotalSupply)).toFixed(4);
+// });
+
+const stakeSlots = computed(() => {
+	console.log("supplyFreeze.value", supplyFreeze.value);
+
+	return (supplyFreeze.value * 1000).toFixed(2);
+});
+
 const supplyFreeze = computed(() => {
 	if (!stake.stakingAmount) {
 		return 0;
 	}
-    console.log("stake.stakingAmount", stake.stakingAmount);
-    console.log("statCollection.harbTotalSupply", statCollection.harbTotalSupply);
-    
-    
-	return ((Number(stake.stakingAmount) / Number(statCollection.harbTotalSupply)) * 100).toFixed(4);
+	const harbTotalSupplyNumber = Number(statCollection.harbTotalSupply) / 10 ** 18;
+	const stakingAmountNumber = Number(stake.stakingAmount) / 10 ** 18;
+
+	return (stakingAmountNumber / harbTotalSupplyNumber) * 100;
 });
 
 const stakeAbleHarbAmount = computed(() => statCollection.harbTotalSupply / 5n);

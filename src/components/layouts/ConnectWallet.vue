@@ -14,14 +14,14 @@
 			</div>
 			<h6 class="connected-tokens-headline">Your Tokens</h6>
 			<div class="connected-tokens">
-				<f-output name="$HARB" :price="harbAmount" :variant="3">
+				<f-output name="$KrAIken" :price="harbAmount" :variant="3">
 					<template #end>
 						<f-button size="small" dense
 							><a :href="chain.chainData?.uniswap" target="_blank">Buy</a></f-button
 						>
 					</template>
 				</f-output>
-				<f-output name="Staked $HARB" :price="compactNumber(stakedAmount)" :variant="3">
+				<f-output name="Staked $KrAIken" :price="compactNumber(stakedAmount)" :variant="3">
 					<template #end>
 						<f-button size="small" dense @click="stakeLink">Stake</f-button>
 					</template>
@@ -57,12 +57,11 @@
 
 <script setup lang="ts">
 import { getCurrentInstance, computed } from "vue";
-import {  useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { getAddressShortName, compactNumber, formatBigIntDivision } from "@/utils/helper";
 import { getBlocky } from "@/utils/blockies";
 import FButton from "@/components/fcomponents/FButton.vue";
 import FOutput from "@/components/fcomponents/FOutput.vue";
-
 
 // import { usePositions } from "@/composables/usePositions";
 // import { useWallet } from "@/composables/useWallet";

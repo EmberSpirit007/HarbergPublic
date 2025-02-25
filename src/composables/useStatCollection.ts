@@ -83,7 +83,6 @@ const statsCollection = computed(() => {
 	}
 });
 
-
 const outstandingStake = computed(() => {
 	if (rawStatsCollections.value?.length > 0) {
 		return BigInt(rawStatsCollections.value[0].outstandingStake);
@@ -110,23 +109,58 @@ const stakeTotalSupply = computed(() => {
 
 //Total Supply Change / 7d=mintedLastWeek−burnedLastWeek
 const totalSupplyChange7d = computed(() => {
-    if (rawStatsCollections.value?.length > 0) {
-		return BigInt(rawStatsCollections.value[0].mintedLastWeek - rawStatsCollections.value[0].burnedLastWeek)
-    } else {
-        return 0n
-    }
+	if (rawStatsCollections.value?.length > 0) {
+		return BigInt(rawStatsCollections.value[0].mintedLastWeek - rawStatsCollections.value[0].burnedLastWeek);
+	} else {
+		return 0n;
+	}
 });
 
-
-//totalsupply Change7d / harbtotalsupply 
+//totalsupply Change7d / harbtotalsupply
 const inflation7d = computed(() => {
-    if (rawStatsCollections.value?.length > 0 && rawStatsCollections.value[0].harbTotalSupply > 0) {
-    return BigInt(rawStatsCollections.value[0].mintedLastWeek - rawStatsCollections.value[0].burnedLastWeek)
-    } else {
-        return 0n
-    }
+	if (rawStatsCollections.value?.length > 0 && rawStatsCollections.value[0].harbTotalSupply > 0) {
+		return BigInt(rawStatsCollections.value[0].mintedLastWeek - rawStatsCollections.value[0].burnedLastWeek);
+	} else {
+		return 0n;
+	}
 });
 
+const stakeableSupply = computed(() => {
+	if (rawStatsCollections.value?.length > 0 && rawStatsCollections.value[0].harbTotalSupply > 0) {
+		console.log("rawStatsCollections.value[0]", rawStatsCollections.value[0]);
+
+		return Number(rawStatsCollections.value[0].stakeTotalSupply) * 0.2;
+	} else {
+		return 0;
+	}
+});
+
+//maxSlots
+const maxSlots = computed(() => {
+	if (rawStatsCollections.value?.length > 0 && rawStatsCollections.value[0].harbTotalSupply > 0) {
+		console.log("rawStatsCollections.value[0]", rawStatsCollections.value[0]);
+
+		return (Number(BigInt(rawStatsCollections.value[0].stakeTotalSupply) / 10n ** 18n) * 0.2) / 100;
+	} else {
+		return 0;
+	}
+});
+
+const claimedSlots = computed(() => {
+	if (stakeTotalSupply.value > 0n) {
+		console.log("stakeableSupply", stakeableSupply.value);
+		console.log("stakeableSupply2", stakeableSupply.value / 10 ** 18);
+		const stakeableSupplyNumber = stakeableSupply.value / 10 ** 18;
+		const outstandingStakeNumber = Number(outstandingStake.value) / 10 ** 18;
+		console.log("outstandingStake.value", outstandingStake.value);
+		console.log("outstandingStake.value2", Number(outstandingStake.value) / 10 ** 18);
+		console.log("outstandingStake.value2", Number(outstandingStake.value) / 10 ** 18);
+		console.log("maxSlots", maxSlots.value);
+		return (outstandingStakeNumber / stakeableSupplyNumber) * maxSlots.value;
+	} else {
+		return 0;
+	}
+});
 
 export async function loadStats() {
 	loading.value = true;
@@ -171,11 +205,14 @@ export function useStatCollection() {
 	return reactive({
 		profit7d,
 		nettoToken7d,
-        inflation7d,
+		inflation7d,
 		outstandingStake,
 		harbTotalSupply,
 		stakeTotalSupply,
-        totalSupplyChange7d,
+		totalSupplyChange7d,
 		initialized,
+		maxSlots,
+		stakeableSupply,
+		claimedSlots,
 	});
 }

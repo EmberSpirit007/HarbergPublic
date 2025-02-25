@@ -28,7 +28,7 @@
 				<p>Staking position</p>
 			</template>
 			<b>ID {{ activePosition?.id }}</b>
-			<b>{{ activePosition?.amount }} $HARB</b>
+			<b>{{ activePosition?.amount }} $KrAIken</b>
 			<b>Tax {{ activePosition?.taxRatePercentage }} %</b>
 		</div>
 	</div>
@@ -172,36 +172,35 @@ watch(
 );
 
 const externalTooltipHandler = (context: any) => {
-    const { chart, tooltip } = context;
-    const tooltipEl = tooltipRef.value;
+	const { chart, tooltip } = context;
+	const tooltipEl = tooltipRef.value;
 
-    // Tooltip ausblenden, wenn keine Daten angezeigt werden sollen
-    if (!tooltip.opacity) {
-        tooltipEl.style.opacity = "0";
-        tooltipEl.style.display = "none";
-        return;
-    }
+	// Tooltip ausblenden, wenn keine Daten angezeigt werden sollen
+	if (!tooltip.opacity) {
+		tooltipEl.style.opacity = "0";
+		tooltipEl.style.display = "none";
+		return;
+	}
 
-    // Aktive Position setzen (Daten des angezeigten Punktes)
-    activePosition.value = tooltip.dataPoints[0].element.$context.raw;
+	// Aktive Position setzen (Daten des angezeigten Punktes)
+	activePosition.value = tooltip.dataPoints[0].element.$context.raw;
 
-    // Positionierung des Tooltips
-    const { offsetLeft: chartX, offsetTop: chartY } = chart.canvas;
+	// Positionierung des Tooltips
+	const { offsetLeft: chartX, offsetTop: chartY } = chart.canvas;
 
-    // Tooltip anpassen
-    tooltipEl.style.opacity = "1";
-    tooltipEl.style.display = "flex";
-    tooltipEl.style.position = "absolute";
+	// Tooltip anpassen
+	tooltipEl.style.opacity = "1";
+	tooltipEl.style.display = "flex";
+	tooltipEl.style.position = "absolute";
 
-    // Tooltip mittig über dem Punkt platzieren
-    tooltipEl.style.left = `${chartX + tooltip.caretX}px`; 
-    tooltipEl.style.top = `${chartY + tooltip.y}px`;
+	// Tooltip mittig über dem Punkt platzieren
+	tooltipEl.style.left = `${chartX + tooltip.caretX}px`;
+	tooltipEl.style.top = `${chartY + tooltip.y}px`;
 
-    // Tooltip für saubere Mitte ausrichten
-    tooltipEl.style.transform = "translateX(-50%)";  
-    tooltipEl.style.pointerEvents = "none";
+	// Tooltip für saubere Mitte ausrichten
+	tooltipEl.style.transform = "translateX(-50%)";
+	tooltipEl.style.pointerEvents = "none";
 };
-
 
 function renderChart(data: any) {
 	console.log("renderChart");
@@ -335,8 +334,8 @@ function renderChart(data: any) {
 						title: {
 							display: true,
 							text: "Slots",
-                            color: "white",
-                            font: {
+							color: "white",
+							font: {
 								size: 16, // Hier die Schriftgröße ändern (z. B. 16px)
 								weight: "bold", // Falls du den Text fett machen möchtest
 							},
@@ -357,8 +356,8 @@ function renderChart(data: any) {
 						title: {
 							display: true,
 							text: "Positions",
-                            color: "white",
-                            font: {
+							color: "white",
+							font: {
 								size: 16, // Hier die Schriftgröße ändern (z. B. 16px)
 								weight: "bold", // Falls du den Text fett machen möchtest
 							},
