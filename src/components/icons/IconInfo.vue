@@ -1,5 +1,5 @@
 <template>
-	<tippy v-if="slots.text" theme="my-theme">
+	<tippy v-if="slots.text" theme="my-theme" trigger="click">
 		<div class="info-icon">
 			<svg :width="props.size" :height="props.size" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path

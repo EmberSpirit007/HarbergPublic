@@ -60,7 +60,7 @@ export function useUnstake() {
 			const amount = compactNumber(
 				formatBigIntDivision(eventArgs.harbergPayout, 10n ** BigInt(wallet.balance.decimals))
 			);
-			contractToast.showSuccessToast(amount, "Success!", "You unstaked", "", "$KrAIken");
+			contractToast.showSuccessToast(amount, "Success!", "You unstaked", "", "$KRK");
 
 			waiting.value = false;
 			wallet.loadBalance();

@@ -13,7 +13,7 @@
 					<div>
 						<div class="profit-stats-item">
 							<div><b>Initial Stake</b></div>
-							<div>{{ compactNumber(props.amount) }} $KrAIken</div>
+							<div>{{ compactNumber(props.amount) }} $KRK</div>
 						</div>
 					</div>
 					<div class="tags-list">
@@ -22,7 +22,7 @@
 				</div>
 				<!-- <div class="collapse-amount">
 					<span class="number-small">{{ compactNumber(props.amount) }}</span>
-					<span class="caption"> $KrAIken</span>
+					<span class="caption"> $KRK</span>
 				</div> -->
 			</div>
 		</template>
@@ -30,15 +30,15 @@
 			<div class="profit-stats-wrapper">
 				<div class="profit-stats-item">
 					<div><b>Tax Paid</b></div>
-					<div>{{ taxPaidGes }} $KrAIken</div>
+					<div>{{ taxPaidGes }} $KRK</div>
 				</div>
 				<div class="profit-stats-item">
 					<div><b>Issuance Earned</b></div>
-					<div>{{ profit }} $KrAIken</div>
+					<div>{{ profit }} $KRK</div>
 				</div>
 				<div class="profit-stats-item profit-stats-total">
 					<div><b>Total</b></div>
-					<div>{{ total.toFixed(5) }} $KrAIken</div>
+					<div>{{ total.toFixed(5) }} $KRK</div>
 				</div>
 			</div>
 		</div>

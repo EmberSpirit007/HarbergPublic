@@ -28,7 +28,7 @@
 				<p>Staking position</p>
 			</template>
 			<b>ID {{ activePosition?.id }}</b>
-			<b>{{ activePosition?.amount }} $KrAIken</b>
+			<b>{{ activePosition?.amount }} $KRK</b>
 			<b>Tax {{ activePosition?.taxRatePercentage }} %</b>
 		</div>
 	</div>

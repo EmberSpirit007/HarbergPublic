@@ -23,7 +23,7 @@
 									v-model="stake.stakingAmountNumber"
 								>
 									<template v-slot:details>
-										<div class="balance">Balance: {{ maxStakeAmount.toFixed(2) }} $KrAIken</div>
+										<div class="balance">Balance: {{ maxStakeAmount.toFixed(2) }} $KRK</div>
 										<div @click="setMaxAmount" class="staking-amount-max">
 											<b>Max</b>
 										</div>
@@ -191,12 +191,12 @@ const claim = useClaim();
 const wallet = useWallet();
 const statCollection = useStatCollection();
 
-const { activePositions, myActivePositions, tresholdValue, myClosedPositions, createRandomPosition } = usePositions();
+const { activePositions } = usePositions();
 
 const floorTax = computed(() => {
 	const taxRate = activePositions.value.reduce((min, item) => {
 		return item.taxRate < min ? item.taxRate : min;
-	}, 0);
+	}, 1);
 	return taxRate * 100;
 });
 const harbAmount = computed(() => {
@@ -225,7 +225,6 @@ const harbAmount = computed(() => {
 // });
 
 const stakeSlots = computed(() => {
-	console.log("supplyFreeze.value", supplyFreeze.value);
 
 	return (supplyFreeze.value * 1000).toFixed(2);
 });
@@ -347,15 +346,20 @@ function setMaxAmount() {
 	stake.stakingAmountNumber = maxStakeAmount.value;
 }
 const snatchPositions = computed(() => {
+    let outStandingStake = statCollection.outstandingStake;
+    // if(true){
+    //     outStandingStake = 20179747656058711211376916n;
+
+    // }
 	if (
-		bigInt2Number(statCollection.outstandingStake, 18) + stake.stakingAmountNumber <=
+		bigInt2Number(outStandingStake, 18) + stake.stakingAmountNumber <=
 		bigInt2Number(statCollection.harbTotalSupply, 18) * 0.2
 	) {
 		return [];
 	}
 	//Differenz aus outstandingSupply und totalSupply bestimmen, wie viel HARB kann zum Snatch verwendet werden
 	const difference =
-		bigInt2Number(statCollection.outstandingStake, 18) +
+		bigInt2Number(outStandingStake, 18) +
 		stake.stakingAmountNumber -
 		bigInt2Number(statCollection.harbTotalSupply, 18) * 0.2;
 	console.log("difference", difference);

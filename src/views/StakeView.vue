@@ -27,7 +27,7 @@
 				></stats-output>
 				<stats-output
 					headline="Total Supply Change / 7d"
-					:price="`+ ${stats.totalSupplyChange7d} USD`"
+					:price="`+ ${stats.totalSupplyChange7d} $KRK`"
 				></stats-output>
 				<stats-output headline="Inflation / 7d" :price="`+${stats.inflation7d}%`"></stats-output>
 			</div>

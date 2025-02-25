@@ -8,18 +8,18 @@
 				</div>
 				<div class="collapse-amount">
 					<span class="number-small">{{ compactNumber(props.amount) }}</span>
-					<span class="caption"> $KrAIken</span>
+					<span class="caption"> $KRK</span>
 				</div>
 			</div>
 		</template>
 		<div class="collapsed-body history">
 			<div>
 				<span class="subheader2">Tax paid</span><span class="number-small">{{ props.taxPaid }}</span
-				><span class="caption"> $KrAIken</span>
+				><span class="caption"> $KRK</span>
 			</div>
 			<div>
 				<span class="subheader2">Profit</span><span class="number-small">{{ profit }}</span
-				><span class="caption"> $KrAIken</span>
+				><span class="caption"> $KRK</span>
 			</div>
 		</div>
 	</f-collapse>

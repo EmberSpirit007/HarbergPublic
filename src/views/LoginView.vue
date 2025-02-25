@@ -7,7 +7,7 @@
                      <div class="error-box" v-if="error">
                         {{ error }}
                      </div>
-					<f-input @input="error = ''" v-model="inputPassword" label="Password"></f-input>
+					<f-input type="password" @input="error = ''" v-model="inputPassword" label="Password" @keyup.enter="login"></f-input>
 					<f-button size="large" @click="login">Login</f-button>
 				</div>
 			</div>
@@ -27,7 +27,7 @@ const passwords = ref(["lobsterDao", "test123"]);
 const inputPassword = ref("")
 function login(){
     if(passwords.value.includes(inputPassword.value)){
-        sessionStorage.setItem('authentificated', "true");
+        localStorage.setItem('authentificated', "true");
         router.push("/")
         return true;
     } else {
@@ -39,7 +39,7 @@ function login(){
 }
 
 onMounted(() => {
-    if(sessionStorage.getItem('authentificated') === "true"){
+    if(localStorage.getItem('authentificated') === "true"){
         router.push("/")
     }
 })

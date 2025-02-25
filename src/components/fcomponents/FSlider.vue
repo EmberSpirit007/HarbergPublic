@@ -67,9 +67,7 @@ const sliderValue = computed({
 });
 
 const percentageDot = computed(() => {
-    console.log("sliderValue.value", sliderValue.value);
     let percentage = (100 * (sliderValue.value - props.min)) / (props.max - props.min);
-    console.log("percentage", percentage);
     
     if(percentage < 20){
         percentage = percentage + 1;
@@ -78,7 +76,6 @@ const percentageDot = computed(() => {
     } else if(percentage > 80){
         percentage = percentage - 3;
     }
-    console.log("percentage-final", percentage);
     
 	return percentage
 });
@@ -97,7 +94,6 @@ function setSliderValue(event: any){
 }
 
 function testMove(event: any) {
-	console.log("event", event);
 }
 
 onUnmounted(() => {
