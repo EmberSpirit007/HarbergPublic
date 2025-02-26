@@ -5,6 +5,7 @@ import { watchBlocks, watchChainId } from "@wagmi/core";
 import { config } from "@/wagmi";
 import logger from "@/utils/logger";
 import type { WatchBlocksReturnType } from "viem";
+import { bigInt2Number } from "@/utils/helper";
 
 interface statsCollection {
 	burnNextHourProjected: bigint;
@@ -129,9 +130,9 @@ const stakeableSupply = computed(() => {
 	if (rawStatsCollections.value?.length > 0 && rawStatsCollections.value[0].harbTotalSupply > 0) {
 		console.log("rawStatsCollections.value[0]", rawStatsCollections.value[0]);
 
-		return Number(rawStatsCollections.value[0].stakeTotalSupply) * 0.2;
+		return stakeTotalSupply.value / 5n;
 	} else {
-		return 0;
+		return 0n;
 	}
 });
 
@@ -140,7 +141,7 @@ const maxSlots = computed(() => {
 	if (rawStatsCollections.value?.length > 0 && rawStatsCollections.value[0].harbTotalSupply > 0) {
 		console.log("rawStatsCollections.value[0]", rawStatsCollections.value[0]);
 
-		return (Number(BigInt(rawStatsCollections.value[0].stakeTotalSupply) / 10n ** 18n) * 0.2) / 100;
+		return (bigInt2Number(stakeTotalSupply.value, 18) * 0.2) / 100;
 	} else {
 		return 0;
 	}
@@ -148,14 +149,8 @@ const maxSlots = computed(() => {
 
 const claimedSlots = computed(() => {
 	if (stakeTotalSupply.value > 0n) {
-		console.log("stakeableSupply", stakeableSupply.value);
-		console.log("stakeableSupply2", stakeableSupply.value / 10 ** 18);
-		const stakeableSupplyNumber = stakeableSupply.value / 10 ** 18;
-		const outstandingStakeNumber = Number(outstandingStake.value) / 10 ** 18;
-		console.log("outstandingStake.value", outstandingStake.value);
-		console.log("outstandingStake.value2", Number(outstandingStake.value) / 10 ** 18);
-		console.log("outstandingStake.value2", Number(outstandingStake.value) / 10 ** 18);
-		console.log("maxSlots", maxSlots.value);
+		const stakeableSupplyNumber = bigInt2Number(stakeableSupply.value, 18);
+		const outstandingStakeNumber = bigInt2Number(outstandingStake.value, 18);
 		return (outstandingStakeNumber / stakeableSupplyNumber) * maxSlots.value;
 	} else {
 		return 0;

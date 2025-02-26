@@ -225,7 +225,6 @@ const harbAmount = computed(() => {
 // });
 
 const stakeSlots = computed(() => {
-
 	return (supplyFreeze.value * 1000).toFixed(2);
 });
 
@@ -251,6 +250,8 @@ const tokenIssuance = computed(() => {
 });
 
 async function stakeSnatch() {
+	//positions to snatch
+	//todo positionen zum snatchen holen
 	await stake.snatch(stake.stakingAmount, taxRate.value);
 	stakeSnatchLoading.value = true;
 	await new Promise((resolve) => setTimeout(resolve, 10000));
@@ -346,11 +347,11 @@ function setMaxAmount() {
 	stake.stakingAmountNumber = maxStakeAmount.value;
 }
 const snatchPositions = computed(() => {
-    let outStandingStake = statCollection.outstandingStake;
-    // if(true){
-    //     outStandingStake = 20179747656058711211376916n;
+	let outStandingStake = statCollection.outstandingStake;
+	// if(true){
+	//     outStandingStake = 20179747656058711211376916n;
 
-    // }
+	// }
 	if (
 		bigInt2Number(outStandingStake, 18) + stake.stakingAmountNumber <=
 		bigInt2Number(statCollection.harbTotalSupply, 18) * 0.2
