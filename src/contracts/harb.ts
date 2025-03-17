@@ -74,6 +74,19 @@ export async function getAllowance() {
 	return result;
 }
 
+export async function getMinStake() : Promise<bigint> {
+    logger.contract("getMinStake");
+    
+	const result = await readContract(config as any, {
+		abi: HarbContract.abi,
+		address: HarbContract.contractAddress,
+		functionName: "minStake",
+		args: [],
+	});
+	allowance.value = result;
+	return result;
+}
+
 export async function getNonce() {
     logger.contract("getNonce");
 

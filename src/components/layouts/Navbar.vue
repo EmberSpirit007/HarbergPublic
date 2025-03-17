@@ -3,15 +3,13 @@
 		<div class="navbar">
 			<div class="navbar-inner navigation-font">
 				<div class="navbar-left" @click="router.push('/')">
-				<img src="@/assets/logo.png" alt="Logo" />
-				<div class="navbar-title">
-                    <span>K</span>
-                    <span class="big-spacing">r</span>
-                    <span class="small-spacing">A</span>
-                    <span class="big-spacing">I</span>
-                    <span>ken</span>
-                    
-                </div>
+                <div class="navbar-title">
+					<span>K</span>
+					<span class="big-spacing">r</span>
+					<span class="small-spacing">A</span>
+					<span class="big-spacing">I</span>
+					<span>ken</span>
+				</div>
 			</div>
 				<div class="navbar-center"></div>
 				<div class="navbar-end">
@@ -122,7 +120,9 @@ header
                 &:hover, &:active, &:focus
                     cursor: pointer
                 .navbar-title
-                    display: none
+                    font-family: 'Audiowide', sans-serif
+                    *>div
+                        font-family: 'Audiowide', sans-serif
                     @media (min-width: 768px)
                         display: block
                     .big-spacing

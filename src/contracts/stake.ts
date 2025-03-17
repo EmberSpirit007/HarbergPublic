@@ -150,3 +150,15 @@ export async function payTax(positionID: bigint) {
 	});
 	return result;
 }
+
+export async function assetsToShares(asset: bigint) {
+    console.log("assetsToShares", asset);
+
+	const result = await readContract(config as any, {
+		abi: StakeContract.abi,
+		address: StakeContract.contractAddress,
+		functionName: "assetsToShares",
+		args: [asset],
+	});
+	return result as bigint;
+}

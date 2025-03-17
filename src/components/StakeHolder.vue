@@ -1,6 +1,5 @@
 <template>
-	<div class="hold-stake-wrapper">
-		<f-card class="inner-border">
+	
 			<div class="hold-inner">
 				<div class="stake-inner">
 					<template v-if="!statCollection.initialized">
@@ -8,6 +7,7 @@
 							<f-loader></f-loader>
 						</div>
 					</template>
+                 
 					<template v-else>
 						<div class="subheader2">Token Amount</div>
 						<FSlider
@@ -34,7 +34,7 @@
 									label="Owner Slots"
 									class="staking-amount"
 									disabled
-									:modelValue="`${stakeSlots}(${supplyFreeze.toFixed(2)})`"
+									:modelValue="`${stakeSlots}(${supplyFreeze?.toFixed(4)})`"
 								>
 									<template #info>
 										Slots correspond to a percentage of ownership in the protocol.<br /><br />1,000
@@ -64,7 +64,7 @@
 										owners.
 									</template>
 								</f-input>
-								<f-input label="Positions Buyout" disabled :modelValue="snatchPositions.length">
+								<f-input label="Positions Buyout" disabled :modelValue="snatchAblePositions.length">
 									<template v-slot:info>
 										This shows you the numbers of staking positions you buy out from current owners
 										by paying a higher tax. If you get bought out yourself by new owners you get
@@ -73,31 +73,36 @@
 								</f-input>
 							</div>
 						</div>
-					</template>
-					<f-button v-if="status === 'disconnected'" @click="showPanel = true" size="large" block
-						>Connect Wallet</f-button
-					>
-					<f-button size="large" disabled block v-else-if="stake.state === 'NoBalance'"
+                        <f-button size="large" disabled block v-if="stake.state === 'NoBalance'"
 						>Insufficient Balance</f-button
 					>
 					<f-button
 						size="large"
+						disabled block
+						v-else-if="!openPositionsAvailable && stake.state === 'StakeAble' && snatchAblePositions.length === 0"
+						>taxRate too low to snatch</f-button
+					>
+					<f-button
+						size="large"
 						block
-						v-else-if="stake.state === 'StakeAble' && snatchPositions.length === 0"
+						v-else-if="stake.state === 'StakeAble' && snatchAblePositions.length === 0"
 						@click="stakeSnatch"
 						>Stake</f-button
 					>
 					<f-button
 						size="large"
 						block
-						v-else-if="stake.state === 'StakeAble' && snatchPositions.length > 0"
-						@click="stake.snatch(stake.stakingAmount, taxRate)"
+						v-else-if="stake.state === 'StakeAble' && snatchAblePositions.length > 0"
+						@click="stakeSnatch"
 						>Snatch and Stake</f-button
 					>
 					<f-button size="large" outlined block v-else-if="stake.state === 'SignTransaction'"
 						>Sign Transaction ...</f-button
 					>
 					<f-button size="large" outlined block v-else-if="stake.state === 'Waiting'">Waiting ...</f-button>
+					</template>
+					
+				
 				</div>
 
 				<!-- <template v-if="myActivePositions.length > 0 && status === 'connected'">
@@ -126,19 +131,15 @@
 							></collapse-history>
 						</template> -->
 			</div>
-		</f-card>
-	</div>
+	
 </template>
 
 <script setup lang="ts">
-import FTabs from "@/components/fcomponents/tabs/FTabs.vue";
-import FTab from "@/components/fcomponents/tabs/FTab.vue";
 import FButton from "@/components/fcomponents/FButton.vue";
 import FInput from "@/components/fcomponents/FInput.vue";
 import FSelect from "@/components/fcomponents/FSelect.vue";
 import FLoader from "@/components/fcomponents/FLoader.vue";
 import FSlider from "@/components/fcomponents/FSlider.vue";
-import FCard from "@/components/fcomponents/FCard.vue";
 import FOutput from "@/components/fcomponents/FOutput.vue";
 import { Icon } from "@iconify/vue";
 import { formatBigIntDivision, InsertCommaNumber, formatBigNumber, bigInt2Number } from "@/utils/helper";
@@ -153,39 +154,30 @@ import axios from "axios";
 import { useAccount } from "@wagmi/vue";
 import { loadActivePositions, usePositions, type Position } from "@/composables/usePositions";
 
-import { useChain } from "@/composables/useChain";
-
 import { useStake } from "@/composables/useStake";
 import { useClaim } from "@/composables/useClaim";
 import { useAdjustTaxRate } from "@/composables/useAdjustTaxRates";
 
-// import { minStake } from "@/contracts/stake";
+import { assetsToShares } from "@/contracts/stake";
+import { getMinStake } from "@/contracts/harb";
 import { useWallet } from "@/composables/useWallet";
-import { ref, onMounted, watch, computed, inject } from "vue";
-import { useStatCollection } from "@/composables/useStatCollection";
+import { ref, onMounted, watch, computed, inject, watchEffect } from "vue";
+import { useStatCollection, loadStats } from "@/composables/useStatCollection";
 import { useRoute } from "vue-router";
-const chain = useChain();
+
+const demo = sessionStorage.getItem("demo") === "true"; 
 const route = useRoute();
 
-const showPanel = inject("showPanel");
-const darkTheme: boolean | undefined = inject("darkTheme");
 const adjustTaxRate = useAdjustTaxRate();
 
-const position = {
-	totalSupplyInit: BigInt("1000000000000000000000"),
-	totalSupplyEnd: BigInt("2000000000000000000000"),
-	amount: 1500,
-};
 
 const activeTab = ref("stake");
 const StakeMenuOpen = ref(false);
-const ignoreOwner = ref(false);
 // let minStakeAmount = ref();
 const taxRate = ref<number>(1.0);
 // const positions = ref<Array<any>>([]);
 const loading = ref<boolean>(true);
 const stakeSnatchLoading = ref<boolean>(false);
-const { status } = useAccount();
 const stake = useStake();
 const claim = useClaim();
 const wallet = useWallet();
@@ -193,53 +185,54 @@ const statCollection = useStatCollection();
 
 const { activePositions } = usePositions();
 
-const floorTax = computed(() => {
-	const taxRate = activePositions.value.reduce((min, item) => {
-		return item.taxRate < min ? item.taxRate : min;
-	}, 1);
-	return taxRate * 100;
-});
-const harbAmount = computed(() => {
-	if (wallet.balance?.value) {
-		return formatBigNumber(wallet.balance.value, wallet.balance.decimals);
-	} else {
-		return "0";
-	}
-});
+const floorTax = ref(1)
+const minStake = ref(0n)
+const stakeSlots = ref();
+const supplyFreeze = ref<number>(0);
+let debounceTimer: ReturnType<typeof setTimeout>;
+watchEffect(() => {
+    console.log("supplyFreeze");
 
-// const supplyFreeze = computed(() => {
-// 	if (!stake.stakingAmount) {
-// 		return 0;
-// 	}
-// 	console.log("stake.stakingAmount", stake.stakingAmount);
+    if (!stake.stakingAmount) {
+        supplyFreeze.value = 0;
+        return;
+    }
 
-// 	console.log("Number(stake.stakingAmount * 10n ** 18n)", Number(stake.stakingAmount * 10n ** 18n));
-// 	console.log("Number(statCollection.stakeTotalSupply)", Number(statCollection.stakeTotalSupply));
-// 	console.log(
-// 		" (Number(stake.stakingAmount * 10n ** 18n) / Number(statCollection.stakeTotalSupply))",
-// 		Number(stake.stakingAmount) / Number(statCollection.stakeTotalSupply)
-// 	);
-// 	console.log("Number(statCollection.stakeTotalSupply)", Number(statCollection.stakeTotalSupply));
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+        stake.stakingAmountShares = await assetsToShares(stake.stakingAmount);
+        const stakingAmountSharesNumber = bigInt2Number(stake.stakingAmountShares, 18);
+        const stakeableSupplyNumber = bigInt2Number(statCollection.stakeableSupply, 18);
+        minStake.value = await getMinStake();
 
-// 	return (Number(stake.stakingAmount) / Number(statCollection.stakeTotalSupply)).toFixed(4);
-// });
-
-const stakeSlots = computed(() => {
-	return (supplyFreeze.value * 1000).toFixed(2);
+        console.log(stakingAmountSharesNumber / stakeableSupplyNumber);
+        supplyFreeze.value = stakingAmountSharesNumber / stakeableSupplyNumber;
+    }, 500); // Verzögerung von 500ms
 });
 
-const supplyFreeze = computed(() => {
-	if (!stake.stakingAmount) {
-		return 0;
-	}
-	const harbTotalSupplyNumber = Number(statCollection.harbTotalSupply) / 10 ** 18;
-	const stakingAmountNumber = Number(stake.stakingAmount) / 10 ** 18;
 
-	return (stakingAmountNumber / harbTotalSupplyNumber) * 100;
+const openPositionsAvailable = computed(() => {
+    if (
+        bigInt2Number(statCollection.outstandingStake, 18) + bigInt2Number(stake.stakingAmountShares, 18) <=
+        (bigInt2Number(statCollection.stakeTotalSupply, 18) * 0.2)
+    ) {
+        
+        return true
+    } else {
+        return false
+    }
 });
 
-const stakeAbleHarbAmount = computed(() => statCollection.harbTotalSupply / 5n);
-const minStake = computed(() => stakeAbleHarbAmount.value / 600n);
+watchEffect(() => {
+    console.log("stakeSlots");
+    stakeSlots.value = (supplyFreeze.value * 1000)?.toFixed(2);
+});
+
+
+// const stakeAbleHarbAmount = computed(() => statCollection.harbTotalSupply / 5n);
+//war das mal so, wurde das geändert --> funktioniert nicht mehr
+// const minStake = computed(() => stakeAbleHarbAmount.value / 600n);
+
 
 const tokenIssuance = computed(() => {
 	if (statCollection.harbTotalSupply === 0n) {
@@ -249,13 +242,24 @@ const tokenIssuance = computed(() => {
 	return (statCollection.nettoToken7d / statCollection.harbTotalSupply) * 100n;
 });
 
+function getMinFloorTax(){
+	const taxRate = activePositions.value.reduce((min, item) => {
+		return item.taxRate < min ? item.taxRate : min;
+	}, 1);
+	return taxRate * 100;
+}
+
 async function stakeSnatch() {
-	//positions to snatch
-	//todo positionen zum snatchen holen
-	await stake.snatch(stake.stakingAmount, taxRate.value);
+    if(snatchAblePositions.value.length === 0){
+        await stake.snatch(stake.stakingAmount, taxRate.value);
+    } else {
+        const snatchAblePositionsIds = snatchAblePositions.value.map((p: Position) => p.positionId);
+        await stake.snatch(stake.stakingAmount, taxRate.value, snatchAblePositionsIds);
+    }
 	stakeSnatchLoading.value = true;
 	await new Promise((resolve) => setTimeout(resolve, 10000));
 	await loadActivePositions();
+	await loadStats();
 	stakeSnatchLoading.value = false;
 }
 
@@ -287,7 +291,8 @@ onMounted(async () => {
 		// await getTotalSupply();
 		// await getTotalSupplyHarb();
 		// await getOutstandingSupply();
-
+        
+        minStake.value = await getMinStake();
 		stake.stakingAmountNumber = minStakeAmount.value;
 	} catch (error) {
 		console.error("error", error);
@@ -313,7 +318,7 @@ onMounted(async () => {
 const minStakeAmount = computed(() => {
 	console.log("minStake", minStake.value);
 
-	return formatBigIntDivision(minStake.value, 10n ** 18n);
+	return bigInt2Number(minStake.value, 18);
 });
 const maxStakeAmount = computed(() => {
 	if (wallet.balance?.value) {
@@ -321,10 +326,10 @@ const maxStakeAmount = computed(() => {
 		console.log("wallet.balance.value", wallet.balance);
 		console.log(
 			"formatBigIntDivision(wallet.balance.value, 10n ** 18n)",
-			formatBigIntDivision(wallet.balance.value, 10n ** 18n)
+			bigInt2Number(wallet.balance.value, 18)
 		);
 
-		return formatBigIntDivision(wallet.balance.value, 10n ** 18n);
+		return bigInt2Number(wallet.balance.value, 18);
 	} else {
 		return 0;
 	}
@@ -346,99 +351,138 @@ function setMaxAmount() {
 
 	stake.stakingAmountNumber = maxStakeAmount.value;
 }
-const snatchPositions = computed(() => {
-	let outStandingStake = statCollection.outstandingStake;
-	// if(true){
-	//     outStandingStake = 20179747656058711211376916n;
+const snatchAblePositions = ref<Array<any>>([]);
 
-	// }
-	if (
-		bigInt2Number(outStandingStake, 18) + stake.stakingAmountNumber <=
-		bigInt2Number(statCollection.harbTotalSupply, 18) * 0.2
-	) {
-		return [];
-	}
-	//Differenz aus outstandingSupply und totalSupply bestimmen, wie viel HARB kann zum Snatch verwendet werden
-	const difference =
-		bigInt2Number(outStandingStake, 18) +
-		stake.stakingAmountNumber -
-		bigInt2Number(statCollection.harbTotalSupply, 18) * 0.2;
-	console.log("difference", difference);
+    watchEffect(async () => {
+    console.log("watchEffect - snatchAblePositions");
 
-	//Division ohne Rest, um zu schauen wie viele Positionen gesnatched werden könnten
-	const snatchAblePositionsCount = Math.floor(difference / minStakeAmount.value);
+    let outStandingStake = statCollection.outstandingStake;
+    let positions = activePositions.value; 
+    let selectedTaxRate = taxRate.value;
 
-	//wenn mehr als 0 Positionen gesnatched werden könnten, wird geschaut wie viele Positionen in Frage kommen
-	if (snatchAblePositionsCount > 0) {
-		const snatchAblePositions = activePositions.value.filter((obj: Position) => {
-			if (ignoreOwner.value) {
-				return obj.taxRatePercentage < taxRate.value;
-			}
-			return obj.taxRatePercentage < taxRate.value && !obj.iAmOwner;
-		});
-		const slicedArray = snatchAblePositions.slice(0, snatchAblePositionsCount);
-		return slicedArray;
-	}
+    // Prüfe, ob bereits offene Positionen verfügbar sind, dann kein Snatching erforderlich
+    if (openPositionsAvailable.value) {
+        snatchAblePositions.value = [];
+        floorTax.value = getMinFloorTax()
+        return;
+    }
 
-	return [];
+    console.log("bigInt2Number(outStandingStake, 18)", bigInt2Number(outStandingStake, 18));
+    console.log("bigInt2Number(stake.stakingAmountShares, 18)", bigInt2Number(stake.stakingAmountShares, 18));
+    console.log("(bigInt2Number(statCollection.stakeTotalSupply, 18) * 0.2)", (bigInt2Number(statCollection.stakeTotalSupply, 18) * 0.2));
+
+    // **1. Berechnung der Differenz**
+    const difference =
+        bigInt2Number(outStandingStake, 18) +
+        bigInt2Number(stake.stakingAmountShares, 18) - 
+        (bigInt2Number(statCollection.stakeTotalSupply, 18) * 0.2);
+
+    console.log("difference", difference);
+
+    // **2. Potentiell snatchbare Positionen holen**
+    const snatchAble = positions.filter((obj: Position) => {
+        if (demo) {
+            return obj.taxRatePercentage < selectedTaxRate;
+        }
+        return obj.taxRatePercentage < selectedTaxRate && !obj.iAmOwner;
+    });
+
+    console.log("snatchAblePositions", snatchAble);
+
+    if (snatchAble.length === 0) {
+        snatchAblePositions.value = [];
+        floorTax.value = getMinFloorTax()
+        return;
+    }
+
+    // **3. Positionen nach der taxRate sortieren (aufsteigend)**
+    const sortedPositions = [...snatchAble].sort((a, b) => a.taxRatePercentage - b.taxRatePercentage);
+
+    // **4. Die 50% der niedrigsten Positionen auswählen**
+    const halfIndex = Math.floor(sortedPositions.length / 2);
+    const cheapestHalf = sortedPositions.slice(0, halfIndex);
+
+    console.log("cheapestHalf", cheapestHalf);
+
+    // **5. Zufällige Auswahl bis zum gewünschten Staking-Bereich**
+    let selectedPositions: Position[] = [];
+    let accumulatedStake = 0;
+
+    // Warte auf die Umrechnung von minStake in minStakeShares
+    const minStakeShares = await assetsToShares(minStake.value);
+    const minStakeShareNumber = bigInt2Number(minStakeShares, 18);
+    
+    console.log("minStakeShares", minStakeShares);
+    console.log("minStakeShareNumber", minStakeShareNumber);
+
+    // Zufällige Reihenfolge für eine bessere Verteilung
+    const shuffled = cheapestHalf.sort(() => Math.random() - 0.5);
+
+    for (const position of shuffled) {
+        console.log("accumulatedStake", accumulatedStake);
+        console.log(" position.stakingAmountShares",  position);
+        console.log("difference", difference);
+        const harbDepositShares = await assetsToShares(position.harbDeposit);
+        const harbDepositNumber = bigInt2Number(harbDepositShares, 18);
+        console.log("harbDepositNumber", harbDepositNumber);
+        
+        if (accumulatedStake + harbDepositNumber <= difference) {
+            selectedPositions.push(position);
+            accumulatedStake += harbDepositNumber;
+        }
+        if (accumulatedStake >= difference) break;
+    }
+
+    console.log("selectedPositions", selectedPositions);
+    snatchAblePositions.value = selectedPositions;
+
+     // **Berechnung von `floorTax.value`**
+     if (selectedPositions.length > 0) {
+        floorTax.value = Math.max(...selectedPositions.map(p => p.taxRatePercentage));
+    } else {
+        floorTax.value = getMinFloorTax()
+    }
 });
+
 </script>
 
 <style lang="sass">
-.hold-stake-wrapper
-    display: flex
-    flex-direction: column
-    gap: 48px
-    .stats-wrapper
+
+.hold-inner
+    .stake-inner
         display: flex
-        gap: 32px
         flex-direction: column
-        @media (min-width: 768px)
-            flex-direction: row
-        .stats-output
-            flex: 1 1 50%
-    .f-card
-        overflow: unset
-        &.inner-border
-            padding: 0
-            .hold-inner
-                .positions-graph
-                    align-self: center
-                    margin-bottom: 32px
-            .stake-inner
-                display: flex
-                flex-direction: column
-                gap: 24px
-                .formular
-                    display: flex
-                    flex-direction: column
-                    gap: 8px
-                    .row
-                        >*
-                            flex: 1 1 auto
-                    .row-1
-                        gap: 12px
-                        >:nth-child(2)
-                            flex: 0 0 auto
-                        .staking-amount
-                            .f-input--details
-                                display: flex
-                                gap: 8px
-                                justify-content: flex-end
-                                color: #9A9898
-                                font-size: 14px
-                                .staking-amount-max
-                                    font-weight: 600
-                                    &:hover, &:active, &:focus
-                                        cursor: pointer
-                    .row-2
-                        justify-content: space-between
-                        >*
-                            flex: 0 0 30%
-                        // >:nth-child(2)
-                        //     flex: 0 0 22%
-                        // >:nth-child(3)
-                        //     flex: 0 1 28%
+        gap: 24px
+        .formular
+            display: flex
+            flex-direction: column
+            gap: 8px
+            .row
+                >*
+                    flex: 1 1 auto
+            .row-1
+                gap: 12px
+                >:nth-child(2)
+                    flex: 0 0 auto
+                .staking-amount
+                    .f-input--details
+                        display: flex
+                        gap: 8px
+                        justify-content: flex-end
+                        color: #9A9898
+                        font-size: 14px
+                        .staking-amount-max
+                            font-weight: 600
+                            &:hover, &:active, &:focus
+                                cursor: pointer
+            .row-2
+                justify-content: space-between
+                >*
+                    flex: 0 0 30%
+                // >:nth-child(2)
+                //     flex: 0 0 22%
+                // >:nth-child(3)
+                //     flex: 0 1 28%
 .stake-arrow
     align-self: center
     font-size: 30px

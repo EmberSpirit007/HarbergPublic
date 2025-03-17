@@ -10,6 +10,7 @@ import { bytesToUint256, uint256ToBytes } from "harb-lib";
 import { bigInt2Number } from "@/utils/helper";
 import { useChain } from "@/composables/useChain";
 import { taxRates } from "@/composables/useAdjustTaxRates";
+import { chainData } from "@/composables/useWallet";
 import logger from "@/utils/logger";
 const rawActivePositions = ref<Array<Position>>([]);
 const rawClosedPositoins = ref<Array<Position>>([]);
@@ -106,13 +107,13 @@ const tresholdValue = computed(() => {
 });
 
 export async function loadActivePositions() {
-	logger.info(`loadActivePositions for chain: ${chain.chainData?.path}`);
-	if (!chain.chainData?.thegraph) {
+	logger.info(`loadActivePositions for chain: ${chainData.value?.path}`);
+	if (!chainData.value?.thegraph) {
 		return [];
 	}
-	console.log("chain.chainData?.thegraph", chain.chainData?.thegraph);
+	console.log("chainData.value?.thegraph", chainData.value?.thegraph);
 
-	const res = await axios.post(chain.chainData?.thegraph, {
+	const res = await axios.post(chainData.value?.thegraph, {
 		query: `query MyQuery {
                         positions(where: {status: Active}, orderBy: taxRate, orderDirection: asc) {
                             id
@@ -142,11 +143,11 @@ function formatId(id: Hex) {
 }
 
 export async function loadMyClosedPositions(account: GetAccountReturnType) {
-	logger.info(`loadMyClosedPositions for chain: ${chain.chainData?.path}`);
-	if (!chain.chainData?.thegraph) {
+	logger.info(`loadMyClosedPositions for chain: ${chainData.value?.path}`);
+	if (!chainData.value?.thegraph) {
 		return [];
 	}
-	const res = await axios.post(chain.chainData?.thegraph, {
+	const res = await axios.post(chainData.value?.thegraph, {
 		query: `query MyQuery {
                     positions(where: {status: Closed, owner: "${account.address?.toLowerCase()}"}) {
                         id

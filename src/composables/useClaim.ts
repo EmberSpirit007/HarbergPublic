@@ -69,6 +69,8 @@ export function useClaim() {
 
 		unwatch = watchAccount(config as any, {
 			async onChange(data) {
+                console.log("watchAccount", data);
+                
 				if (data.address) {
                     await HarbContract.setHarbContract();
                     

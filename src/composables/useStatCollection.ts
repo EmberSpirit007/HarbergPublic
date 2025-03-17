@@ -1,11 +1,12 @@
 import { ref, onMounted, onUnmounted, reactive, computed } from "vue";
 import axios from "axios";
-import { useChain } from "./useChain";
+import { chainData } from "./useWallet";
 import { watchBlocks, watchChainId } from "@wagmi/core";
 import { config } from "@/wagmi";
 import logger from "@/utils/logger";
 import type { WatchBlocksReturnType } from "viem";
 import { bigInt2Number } from "@/utils/helper";
+const demo = sessionStorage.getItem("demo") === "true"; 
 
 interface statsCollection {
 	burnNextHourProjected: bigint;
@@ -27,15 +28,14 @@ interface statsCollection {
 const rawStatsCollections = ref<Array<statsCollection>>([]);
 const loading = ref(false);
 const initialized = ref(false);
-const chain = useChain();
 
 export async function loadStatsCollection() {
-	logger.info(`loadStatsCollection for chain: ${chain.chainData?.path}`);
-	if (!chain.chainData?.thegraph) {
+	logger.info(`loadStatsCollection for chain: ${chainData.value?.path}`);
+	if (!chainData.value?.thegraph) {
 		return [];
 	}
 
-	const res = await axios.post(chain.chainData?.thegraph, {
+	const res = await axios.post(chainData.value?.thegraph, {
 		query: `query MyQuery {
             stats_collection {
               burnNextHourProjected
@@ -85,6 +85,10 @@ const statsCollection = computed(() => {
 });
 
 const outstandingStake = computed(() => {
+    if (demo) {
+        // outStandingStake = 1990000000000000000000000n;
+        return 2000000000000000000000000n;
+    }
 	if (rawStatsCollections.value?.length > 0) {
 		return BigInt(rawStatsCollections.value[0].outstandingStake);
 	} else {

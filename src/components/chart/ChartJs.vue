@@ -106,6 +106,8 @@ function toggleFullscreen() {
 watch(
 	() => props.positions,
 	(newData) => {
+        console.log("props.positions", props.positions);
+
 		myChart.value.value.destroy();
 		renderChart(props.positions);
 
@@ -163,7 +165,7 @@ watch(
 			myChart.value.value.data.datasets[0].backgroundColor = backgroundColorArray;
 
 			myChart.value.value.ctx.save();
-			myChart.value.value.update();
+			myChart.value.value?.update();
 		}
 	},
 	{
@@ -304,7 +306,7 @@ function renderChart(data: any) {
 								// This update is needed to display up to date zoom level in the title.
 								// Without this, previous zoom level is displayed.
 								// The reason is: title uses the same beforeUpdate hook, and is evaluated before zoom.
-								object.chart.update("none");
+								object.chart?.update("none");
 							},
 						},
 					},

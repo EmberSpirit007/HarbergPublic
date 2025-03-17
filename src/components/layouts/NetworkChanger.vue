@@ -9,7 +9,7 @@
 			<div v-show="showMenu" class="network-changer--list">
 				<div class="list-inner" ref="listInner">
 					<div class="list--element" v-for="chain in chains" :key="chain.id">
-						<template v-if="chain.id === activeChain">
+						<template v-if="chain.id === wallet.account.chainId">
 							<icon-base></icon-base>
 							<div>{{ chain.name }}</div>
 							<div>Connected</div>
@@ -32,9 +32,9 @@ import { ref } from "vue";
 import { useChains, useChainId, useSwitchChain } from "@wagmi/vue";
 import {Icon} from "@iconify/vue";
 import FButton from "@/components/fcomponents/FButton.vue";
-
+import { useWallet } from "@/composables/useWallet";
 const chains = useChains();
-const activeChain = useChainId();
+const wallet = useWallet();
 const { switchChain } = useSwitchChain();
 
 const showMenu = ref<boolean>(false);

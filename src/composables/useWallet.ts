@@ -3,10 +3,11 @@ import { type Ref } from "vue";
 import { getBalance, watchAccount, watchChainId } from "@wagmi/core";
 import { type WatchAccountReturnType, type GetAccountReturnType, type GetBalanceReturnType } from "@wagmi/core";
 import { config } from "@/wagmi";
-import { type Address, type Chain } from "viem";
 import { getAllowance, HarbContract, getNonce } from "@/contracts/harb";
-import { loadPositions } from "@/composables/usePositions";
 import logger from "@/utils/logger";
+import { setHarbContract } from "@/contracts/harb";
+import { setStakeContract } from "@/contracts/stake";
+import {chainsData} from "@/config"
 
 const balance = ref<GetBalanceReturnType>({
     value: 0n,
@@ -27,6 +28,10 @@ const account = ref<GetAccountReturnType>({
 	status: "disconnected",
 });
 
+export const chainData = computed(() => {
+    return  chainsData.find((obj) => obj.id === account.value.chainId)
+})
+
 let unwatch: any = null;
 let unwatchChain: any = null;
 export function useWallet() {
@@ -40,7 +45,8 @@ export function useWallet() {
 				address: account.value.address,
 				token: HarbContract.contractAddress,
 			});
-
+            console.log("balance.value", balance.value);
+            
 			return balance.value;
 		} else {
 			return 0n;
@@ -52,6 +58,8 @@ export function useWallet() {
 
 		unwatch = watchAccount(config as any, {
 			async onChange(data) {
+                console.log("watchaccount-useWallet", data);
+                
                 if(!data.address) {
 					logger.info(`disconnected`);
                     balance.value = {
@@ -60,23 +68,29 @@ export function useWallet() {
                         symbol: "",
                         formatted: ""
                     }
-                } else if (account.value.address !== data.address) {
+                } else if (account.value.address !== data.address || account.value.chainId !== data.chainId) {
 					logger.info(`Account changed!:`, data.address);
 					account.value = data;
 					await loadBalance();
 					await getAllowance();
 					// await loadPositions();
 					await getNonce();
+                    setHarbContract()
+                    setStakeContract()
 				}
 			},
 		});
     }
 
+
+    //funzt nicht mehr-> library Änderung?
     if(!unwatchChain){
         console.log("unwatchChain");
 
 		unwatchChain = watchChainId(config as any, {
 			async onChange(chainId) {
+                console.log("chainId123", chainId);
+                
 					await loadBalance();
 					await getAllowance();
 					await getNonce();

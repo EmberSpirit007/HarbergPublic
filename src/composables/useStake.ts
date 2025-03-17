@@ -14,7 +14,7 @@ import {
 } from "@wagmi/core";
 import { HarbContract } from "@/contracts/harb";
 import { type Abi, type Address } from "viem";
-import { StakeContract, minStake, snatchService, permitAndSnatch } from "@/contracts/stake";
+import { StakeContract, minStake, snatchService, permitAndSnatch, assetsToShares } from "@/contracts/stake";
 import { getNonce, nonce, getName } from "@/contracts/harb";
 import { useWallet } from "@/composables/useWallet";
 import { createPermitObject, getSignatureRSV } from "@/utils/blockchain";
@@ -52,6 +52,7 @@ interface PositionCreatedArgs {
 
 export function useStake() {
 	const stakingAmountRaw = ref();
+	const stakingAmountShares = ref();
 	const loading = ref(false);
 	const waiting = ref(false);
 
@@ -59,6 +60,10 @@ export function useStake() {
 
 	const state: ComputedRef<StakeState> = computed(() => {
 		const balance = wallet.balance.value;
+        console.log("balance123", balance);
+        console.log("wallet", wallet);
+        
+        
 		if (loading.value) {
 			return StakeState.SignTransaction;
 		} else if (minStake.value > balance || stakingAmount.value > balance) {
@@ -92,10 +97,11 @@ export function useStake() {
 		},
 	});
 
+
 	// const stakingAmountNumber = computed(() => return staking)
 
-	async function snatch(stakingAmount: BigInt, taxRate: number) {
-		console.log("snatch", { stakingAmount, taxRate });
+	async function snatch(stakingAmount: BigInt, taxRate: number, positions:Array<any> = []) {
+		console.log("snatch", { stakingAmount, taxRate, positions });
 		const account = getAccount(config as any);
 		const taxRateObj = taxRates.find((obj) => obj.year === taxRate);
 
@@ -138,8 +144,9 @@ export function useStake() {
 
 			const { r, s, v } = getSignatureRSV(signature);
 			loading.value = true;
-
-			const hash = await permitAndSnatch(assets, account.address!, taxRateObj?.index!, [], deadline, v, r, s);
+            console.log("permitAndSnatch", assets, account.address!, taxRateObj?.index!, positions, deadline, v, r, s);
+            
+			const hash = await permitAndSnatch(assets, account.address!, taxRateObj?.index!, positions, deadline, v, r, s);
 			console.log("hash", hash);
 			loading.value = false;
 			waiting.value = true;
@@ -177,5 +184,5 @@ export function useStake() {
 		}
 	}
 
-	return reactive({ stakingAmount, stakingAmountNumber, state, snatch });
+	return reactive({ stakingAmount, stakingAmountShares, stakingAmountNumber, state, snatch });
 }

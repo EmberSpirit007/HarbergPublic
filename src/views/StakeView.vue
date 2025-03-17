@@ -14,7 +14,22 @@
 
 			<div class="stake-view-body">
 				<chart-complete></chart-complete>
-				<stake-holder></stake-holder>
+				<div class="hold-stake-wrapper">
+					<f-card class="inner-border">
+                        <template v-if="wallet.account.chainId && !chainsArray.includes(wallet.account.chainId)">
+                     Chain not supported
+                    </template>
+                    <template v-else-if="status !== 'connected'">
+                        <f-button @click="showPanel = true" size="large" block
+						>Connect Wallet</f-button
+					>
+                    </template>
+                    <template v-else >
+
+						<stake-holder ></stake-holder>
+                    </template>
+					</f-card>
+				</div>
 			</div>
 		</div>
 		<div class="statistics-wrapper">
@@ -58,16 +73,25 @@ import StakeHolder from "@/components/StakeHolder.vue";
 import ChartComplete from "@/components/chart/ChartComplete.vue";
 import StatsOutput from "@/components/StatsOutput.vue";
 import CollapseActive from "@/components/collapse/CollapseActive.vue";
-import { onMounted, computed } from "vue";
+import { onMounted, computed, inject } from "vue";
 import { useStatCollection } from "@/composables/useStatCollection";
+import { useChains, useAccount } from "@wagmi/vue";
+import { useWallet } from "@/composables/useWallet";
+import FCard from "@/components/fcomponents/FCard.vue";
 import IconInfo from "@/components/icons/IconInfo.vue";
+import FButton from "@/components/fcomponents/FButton.vue";
+
 // todo interface positions
 import { usePositions } from "@/composables/usePositions";
-import { compactNumber, InsertCommaNumber } from "@/utils/helper";
+const { status } = useAccount();
+const showPanel = inject("showPanel");
 
+import { compactNumber, InsertCommaNumber } from "@/utils/helper";
 const { myActivePositions, tresholdValue, activePositions } = usePositions();
 
 const stats = useStatCollection();
+const chains = useChains();
+const wallet = useWallet();
 
 function calculateAverageTaxRate(data: any): number {
 	console.log("data", data);
@@ -79,6 +103,9 @@ function calculateAverageTaxRate(data: any): number {
 	const averageTaxRate = totalTaxRate / data.length;
 	return averageTaxRate * 100;
 }
+
+const chainsArray = computed(() => chains.value.map((chain) => chain.id));
+
 
 const averageTaxRate = computed(() => calculateAverageTaxRate(activePositions.value));
 onMounted(async () => {});
@@ -109,6 +136,18 @@ onMounted(async () => {});
                 flex: 1 1 67%
             .hold-stake-wrapper
                 flex: 1 1 33%
+                display: flex
+                flex-direction: column
+                gap: 48px
+                .f-card
+                    overflow: unset
+                    .f-card__body
+                        height: 100%
+                        display: flex
+                        align-items: center
+                        justify-content: center
+                    &.inner-border
+                        padding: 0
 .statistics-wrapper
     .statistics-outputs-wrapper
         display: flex

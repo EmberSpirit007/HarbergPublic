@@ -121,6 +121,6 @@ function setActive(tab: any) {
                     color: var(--color-tab-border--active)
     .f-tabs__content
         padding: 16px 12px
-        @media (min-width: 992px)
+        @media (min-width: 768px)
             padding: 16px 24px
 </style>
