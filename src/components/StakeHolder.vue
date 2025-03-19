@@ -438,7 +438,10 @@ const snatchAblePositions = ref<Array<any>>([]);
 
      // **Berechnung von `floorTax.value`**
      if (selectedPositions.length > 0) {
-        floorTax.value = Math.max(...selectedPositions.map(p => p.taxRatePercentage));
+         const taxPosition = Math.max(...selectedPositions.map(p => p.taxRateIndex)) +1;
+         
+         floorTax.value = adjustTaxRate.taxRates[taxPosition].year;
+         
     } else {
         floorTax.value = getMinFloorTax()
     }
