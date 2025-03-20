@@ -369,8 +369,8 @@ watchEffect(async () => {
 		if (demo) {
 			return obj.taxRatePercentage < selectedTaxRate;
 		}
-		// return obj.taxRatePercentage < selectedTaxRate && !obj.iAmOwner;
-		return obj.taxRatePercentage < selectedTaxRate;
+		return obj.taxRatePercentage < selectedTaxRate && !obj.iAmOwner;
+		// return obj.taxRatePercentage < selectedTaxRate;
 	});
 
 	console.log("snatchAblePositions", snatchAble);
