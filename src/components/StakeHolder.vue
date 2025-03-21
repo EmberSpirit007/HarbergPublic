@@ -381,51 +381,63 @@ watchEffect(async () => {
 		return;
 	}
 
-	// **3. Positionen nach der taxRate sortieren (aufsteigend)**
-	const sortedPositions = [...snatchAble].sort((a, b) => a.taxRatePercentage - b.taxRatePercentage);
+	// 3. Positionen nach taxRate sortieren (aufsteigend)
+const sortedPositions = [...snatchAble].sort((a, b) => a.taxRatePercentage - b.taxRatePercentage);
 
-	// **4. Die 50% der niedrigsten Positionen auswählen**
-	const halfIndex = Math.floor(sortedPositions.length / 2);
-	const cheapestHalf = sortedPositions.slice(0, halfIndex);
+// 4. Die 50 % der niedrigsten Positionen auswählen
+const halfIndex = Math.floor(sortedPositions.length / 2);
+let candidatePositions = sortedPositions.slice(0, halfIndex);
 
-	console.log("cheapestHalf", cheapestHalf);
+// Falls zu wenig vorhanden, nimm gleich alle
+if (candidatePositions.length === 0) {
+  candidatePositions = sortedPositions;
+}
 
-	// **5. Zufällige Auswahl bis zum gewünschten Staking-Bereich**
-	let selectedPositions: Position[] = [];
-	let accumulatedStake = 0;
+// 5. Zufällige Reihenfolge nur innerhalb der günstigeren Hälfte
+const shuffled = [...candidatePositions].sort(() => Math.random() - 0.5);
 
-	// Warte auf die Umrechnung von minStake in minStakeShares
-	const minStakeShares = await assetsToShares(minStake.value);
-	const minStakeShareNumber = bigInt2Number(minStakeShares, 18);
+let selectedPositions: Position[] = [];
+let accumulatedStake = 0;
 
-	console.log("minStakeShares", minStakeShares);
-	console.log("minStakeShareNumber", minStakeShareNumber);
+const minStakeShares = await assetsToShares(minStake.value);
+const minStakeShareNumber = bigInt2Number(minStakeShares, 18);
 
-	// Zufällige Reihenfolge für eine bessere Verteilung
-	const shuffled = cheapestHalf.sort(() => Math.random() - 0.5);
-	console.log("shuffled", shuffled);
+// Erstversuch: mit der günstigen Hälfte
+for (const position of shuffled) {
+  const harbDepositShares = await assetsToShares(position.harbDeposit);
+  const harbDepositNumber = bigInt2Number(harbDepositShares, 18);
 
-	for (const position of shuffled) {
-		console.log("accumulatedStake", accumulatedStake);
-		console.log(" position.stakingAmountShares", position);
-		console.log("difference", difference);
-		const harbDepositShares = await assetsToShares(position.harbDeposit);
-		const harbDepositNumber = bigInt2Number(harbDepositShares, 18);
-		console.log("harbDepositNumber", harbDepositNumber);
+  if (accumulatedStake <= difference) {
+    selectedPositions.push(position);
+    accumulatedStake += harbDepositNumber;
+  }
 
-		if (accumulatedStake <= difference) {
-			selectedPositions.push(position);
-			accumulatedStake += harbDepositNumber;
-		}
-		if (accumulatedStake >= difference) break;
-	}
+  if (accumulatedStake >= difference) break;
+}
 
+// Fallback: restliche Positionen – sortiert von günstig nach teuer
+if (accumulatedStake < difference && candidatePositions.length < sortedPositions.length) {
+  const remainingPositions = sortedPositions.slice(halfIndex); // bereits sortiert!
+
+  for (const position of remainingPositions) {
+    const harbDepositShares = await assetsToShares(position.harbDeposit);
+    const harbDepositNumber = bigInt2Number(harbDepositShares, 18);
+
+    if (!selectedPositions.includes(position)) {
+      selectedPositions.push(position);
+      accumulatedStake += harbDepositNumber;
+    }
+
+    if (accumulatedStake >= difference) break;
+  }
+}
 	console.log("selectedPositions", selectedPositions);
 	snatchAblePositions.value = selectedPositions;
 
 	// **Berechnung von `floorTax.value`**
 	if (selectedPositions.length > 0) {
-		floorTax.value = Math.max(...selectedPositions.map((p) => p.taxRatePercentage));
+        const taxRatePosition = Math.max(...selectedPositions.map((p) => p.taxRateIndex)) +1;
+		floorTax.value = adjustTaxRate.taxRates[taxRatePosition].year;
 	} else {
 		floorTax.value = getMinFloorTax();
 	}
