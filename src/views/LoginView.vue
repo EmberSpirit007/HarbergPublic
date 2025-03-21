@@ -23,7 +23,7 @@ import {useRouter} from "vue-router"
 const router = useRouter();
 
 const error = ref("")
-const passwords = ref(["lobsterDao", "test123"]);
+const passwords = ref(["lobsterDao", "test123", "lobster-x010syqe?412!"]);
 const inputPassword = ref("")
 function login(){
     if(passwords.value.includes(inputPassword.value)){

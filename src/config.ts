@@ -10,7 +10,7 @@ export const chainsData = [
     }, {
         //base-sepolia
         id: 84532,
-        thegraph: "https://api.studio.thegraph.com/query/71271/harb-base-sepolia/v0.0.10",
+        thegraph: "https://api.studio.thegraph.com/query/71271/harb-base-sepolia/v0.0.12",
         path: "sepoliabase",
         stake: "0xe28020BCdEeAf2779dd47c670A8eFC2973316EE2",
         harb: "0x22c264Ecf8D4E49D1E3CabD8DD39b7C4Ab51C1B8",
